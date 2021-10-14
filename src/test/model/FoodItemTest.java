@@ -3,7 +3,7 @@ package model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.text.ParseException;
+
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,7 +43,7 @@ public class FoodItemTest {
     }
 
     @Test
-    public void testMilliSecondToDate() throws ParseException {
+    public void testMilliSecondToDate()  {
 
         assertEquals(new Date(foodItem.purchasedDateinMilli), foodItem.milliSecondToDate(foodItem.purchasedDateinMilli));
     }

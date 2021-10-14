@@ -41,5 +41,14 @@ public class FoodItemList {
 
     }
 
+    public boolean containInFoodItemList(String s) {
+        for (FoodItem foodItem : foodItemList) {
+            if (foodItem.foodItemName.equals(s)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 }

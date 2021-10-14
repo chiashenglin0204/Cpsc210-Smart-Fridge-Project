@@ -3,7 +3,7 @@ package model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ShoppingItemListTest {
     private ShoppingItemList shoppingItemList;
@@ -31,6 +31,15 @@ public class ShoppingItemListTest {
         shoppingItemList.deleteFoodItem(banana);
         assertEquals(4,shoppingItemList.shoppingItemList.size());
 
+
+    }
+
+    @Test
+    public void testContainInFoodItemList(){
+        shoppingItemList.addFoodItem(banana);
+        shoppingItemList.addFoodItem(apple);
+        assertTrue(shoppingItemList.containInShoppingItemList("banana"));
+        assertFalse(shoppingItemList.containInShoppingItemList("anana"));
 
     }
 

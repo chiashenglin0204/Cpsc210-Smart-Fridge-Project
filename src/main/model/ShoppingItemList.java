@@ -23,6 +23,15 @@ public class ShoppingItemList {
         shoppingItemList.remove(foodItem);
     }
 
+    public boolean containInShoppingItemList(String s) {
+        for (FoodItem foodItem : shoppingItemList) {
+            if (foodItem.foodItemName.equals(s)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /*public ShoppingItemList returnUnpurchasedShoppingItem() {
         ShoppingItemList unpurchasedShoppingItem = new ShoppingItemList();
         for (FoodItem foodItem : shoppingItemList) {

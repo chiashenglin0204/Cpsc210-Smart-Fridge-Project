@@ -32,5 +32,16 @@ public class FoodItemListTest {
 
     }
 
+    @Test
+    public void testContainInFoodItemList(){
+        foodItemList.addFoodItem(banana);
+        foodItemList.addFoodItem(apple);
+        assertTrue(foodItemList.containInFoodItemList("banana"));
+        assertFalse(foodItemList.containInFoodItemList("anana"));
+
+    }
+
+
+
 
 }
