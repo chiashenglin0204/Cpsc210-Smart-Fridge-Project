@@ -4,18 +4,58 @@ package model;
 import java.util.Date;
 
 public class FoodItem {
-    public String foodItemName;
-    public long purchasedDateinMilli;
-    public long expiryDateInMilli;
+    private String foodItemName;
+    private long purchasedDateinMilli;
+    private long expiryDateInMilli;
 
-    public Status status;
-    public boolean expired;
+    private Status status;
+    private boolean expired;
 
 
     public enum Status {
         New,
         Used,
         OutOfStock,
+    }
+
+    public String getFoodItemName() {
+        return foodItemName;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public long getPurchasedDateinMilli() {
+        return purchasedDateinMilli;
+    }
+
+    public long getExpiryDateInMilli() {
+        return expiryDateInMilli;
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setFoodItemName(String foodItemName) {
+        this.foodItemName = foodItemName;
+    }
+
+    public void setPurchasedDateinMilli(long purchasedDateinMilli) {
+        this.purchasedDateinMilli = purchasedDateinMilli;
+    }
+
+    public void setExpiryDateInMilli(long expiryDateInMilli) {
+        this.expiryDateInMilli = expiryDateInMilli;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
     }
 
     // Effect: get the local time now

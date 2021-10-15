@@ -19,7 +19,7 @@ public class ShoppingItemListTest {
     public void testAddFoodItem(){
         shoppingItemList.addFoodItem(banana);
         shoppingItemList.addFoodItem(apple);
-        assertEquals(2, shoppingItemList.shoppingItemList.size());
+        assertEquals(2, shoppingItemList.getShoppingItemList().size());
     }
 
 
@@ -29,7 +29,7 @@ public class ShoppingItemListTest {
             shoppingItemList.addFoodItem(banana);
         }
         shoppingItemList.deleteFoodItem(banana);
-        assertEquals(4,shoppingItemList.shoppingItemList.size());
+        assertEquals(4,shoppingItemList.getShoppingItemList().size());
 
 
     }

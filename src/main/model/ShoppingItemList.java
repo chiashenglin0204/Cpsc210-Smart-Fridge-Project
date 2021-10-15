@@ -4,7 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShoppingItemList {
-    public List<FoodItem> shoppingItemList;
+    private List<FoodItem> shoppingItemList;
+
+    public List<FoodItem> getShoppingItemList() {
+        return shoppingItemList;
+    }
+
+    public void setShoppingItemList(List<FoodItem> shoppingItemList) {
+        this.shoppingItemList = shoppingItemList;
+    }
 
     // Effects: ShoppingItemList is empty
     public ShoppingItemList() {
@@ -25,7 +33,7 @@ public class ShoppingItemList {
 
     public boolean containInShoppingItemList(String s) {
         for (FoodItem foodItem : shoppingItemList) {
-            if (foodItem.foodItemName.equals(s)) {
+            if (foodItem.getFoodItemName().equals(s)) {
                 return true;
             }
         }

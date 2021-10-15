@@ -6,7 +6,15 @@ import java.util.List;
 
 public class FoodItemList {
 
-    public List<FoodItem> foodItemList;
+    private List<FoodItem> foodItemList;
+
+    public List<FoodItem> getFoodItemList() {
+        return foodItemList;
+    }
+
+    public void setFoodItemList(List<FoodItem> foodItemList) {
+        this.foodItemList = foodItemList;
+    }
 
     // Effects: FoodItemList is empty
     public FoodItemList() {
@@ -33,7 +41,7 @@ public class FoodItemList {
         FoodItemList expiredFoodItemList = new FoodItemList();
         for (FoodItem foodItem : foodItemList) {
             foodItem.markExpiryFoodItem();
-            if (foodItem.expired) {
+            if (foodItem.isExpired()) {
                 expiredFoodItemList.addFoodItem(foodItem);
             }
         }
@@ -44,7 +52,7 @@ public class FoodItemList {
 
     public boolean containInFoodItemList(String s) {
         for (FoodItem foodItem : foodItemList) {
-            if (foodItem.foodItemName.equals(s)) {
+            if (foodItem.getFoodItemName().equals(s)) {
                 return true;
             }
         }

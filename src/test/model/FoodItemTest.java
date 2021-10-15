@@ -20,10 +20,10 @@ public class FoodItemTest {
     @Test
     public void testMarkFoodItemStatus() {
         foodItem.markFoodItemStatus(FoodItem.Status.Used);
-        assertEquals(FoodItem.Status.Used, foodItem.status);
+        assertEquals(FoodItem.Status.Used, foodItem.getStatus());
 
         foodItem.markFoodItemStatus(FoodItem.Status.OutOfStock);
-        assertEquals(FoodItem.Status.OutOfStock, foodItem.status);
+        assertEquals(FoodItem.Status.OutOfStock, foodItem.getStatus());
 
 
     }
@@ -33,19 +33,19 @@ public class FoodItemTest {
         FoodItem banana = new FoodItem("banana", 2020,
                 FoodItem.getLocalTime() + 20);
         banana.markExpiryFoodItem();
-        assertFalse(banana.expired);
+        assertFalse(banana.isExpired());
 
         FoodItem apple = new FoodItem("apple", 2020,
                 FoodItem.getLocalTime() - 20);
         apple.markExpiryFoodItem();
-        assertTrue(apple.expired);
+        assertTrue(apple.isExpired());
 
     }
 
     @Test
     public void testMilliSecondToDate()  {
 
-        assertEquals(new Date(foodItem.purchasedDateinMilli), foodItem.milliSecondToDate(foodItem.purchasedDateinMilli));
+        assertEquals(new Date(foodItem.getPurchasedDateinMilli()), foodItem.milliSecondToDate(foodItem.getPurchasedDateinMilli()));
     }
 
 }

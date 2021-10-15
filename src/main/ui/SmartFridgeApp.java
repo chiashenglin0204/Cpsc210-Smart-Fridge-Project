@@ -100,22 +100,22 @@ public class SmartFridgeApp {
 
             FoodItem foodItem1 = new FoodItem(foodItemName, askForPurchasedDate(), askForExpiryDate());
             foodItemList.addFoodItem(foodItem1);
-            System.out.println(foodItemList.foodItemList.get(0).foodItemName);
+            System.out.println(foodItemList.getFoodItemList().get(0).getFoodItemName());
             System.out.println(
-                    "Purchased date: " + foodItemList.foodItemList.get(0).milliSecondToDate(
-                            foodItem1.purchasedDateinMilli)
+                    "Purchased date: " + foodItemList.getFoodItemList().get(0).milliSecondToDate(
+                            foodItem1.getPurchasedDateinMilli())
             );
             System.out.println(
-                    "Expiry date: " + foodItemList.foodItemList.get(0).milliSecondToDate(foodItem1.expiryDateInMilli));
+                    "Expiry date: "
+                            + foodItemList.getFoodItemList().get(0).milliSecondToDate(
+                            foodItem1.getExpiryDateInMilli()));
             notEnd = askForRepeat();
         }
 
     }
 
     private boolean askForRepeat() {
-
-        boolean keepDoing = true;
-        while (keepDoing) {
+        while (true) {
             System.out.println("Want to keep doing?, type y for yes, n for no");
             String choiceInputTF = input.nextLine();
             if (choiceInputTF.length() >= 1) {
@@ -123,18 +123,13 @@ public class SmartFridgeApp {
             }
 
             if (choiceInputTF.equals("y")) {
-                keepDoing = false;
                 return true;
             } else if (choiceInputTF.equals("n")) {
-                keepDoing = false;
                 return false;
             } else {
                 System.out.println("invalid input, please type again");
             }
         }
-        return false;
-
-
     }
 
     private long askForExpiryDate() throws ParseException {
@@ -170,68 +165,67 @@ public class SmartFridgeApp {
     }
 
     private void doDeleteFoodItem() {
-        boolean notEnd = true;
-        while (notEnd) {
+        boolean onGoing;
+        String foodItemNameInput;
+        do {
+            foodItemNameInput = "";
             System.out.println("\nPlease enter FoodItem's Name you want to delete in your FoodItem List");
-            String foodItemNameInput = input.nextLine();
-
-
             while (foodItemNameInput.length() < 1) {
                 foodItemNameInput = input.nextLine();
-
-                if (foodItemNameInput.length() >= 1) {
-                    System.out.println("you entered: " + foodItemNameInput);
-                }
-                if (foodItemList.containInFoodItemList(foodItemNameInput)) {
-
-
-                    for (FoodItem foodItem : foodItemList.foodItemList) {
-                        if (foodItem.foodItemName.equals(foodItemNameInput)) {
-                            foodItemList.deleteFoodItem(foodItem);
-                            break;
-                        }
-                    }
-
-                    System.out.println("you have deleted: " + foodItemNameInput + " in your FoodItem List");
-                } else {
-                    System.out.println("Can't find " + foodItemNameInput + " in your FoodItem List");
-                }
-
             }
-            notEnd = askForRepeat();
+            if (foodItemNameInput.length() >= 1) {
+                System.out.println("you entered: " + foodItemNameInput);
+            }
+            tryToDeleteFoodItemFromFoodItemList(foodItemNameInput);
+
+            onGoing = askForRepeat();
+        } while (onGoing);
+    }
+
+    private void tryToDeleteFoodItemFromFoodItemList(String foodItemNameInput) {
+        if (foodItemList.containInFoodItemList(foodItemNameInput)) {
+            for (FoodItem foodItem : foodItemList.getFoodItemList()) {
+                if (foodItem.getFoodItemName().equals(foodItemNameInput)) {
+                    foodItemList.deleteFoodItem(foodItem);
+                    break;
+                }
+            }
+            System.out.println("you have deleted: " + foodItemNameInput + " in your FoodItem List");
+        } else {
+            System.out.println("Can't find " + foodItemNameInput + " in your FoodItem List");
         }
     }
 
-
     private void doDeleteShoppingItem() {
-        boolean notEnd = true;
-        while (notEnd) {
+        boolean onGoing;
+        String foodItemNameInput;
+        do {
+            foodItemNameInput = "";
             System.out.println("\nPlease enter FoodItem's Name you want to delete in your ShoppingItem List");
-            String foodItemNameInput = input.nextLine();
-
             while (foodItemNameInput.length() < 1) {
                 foodItemNameInput = input.nextLine();
-                if (foodItemNameInput.length() >= 1) {
-                    System.out.println("you entered: " + foodItemNameInput);
-                }
-                if (shoppingItemList.containInShoppingItemList(foodItemNameInput)) {
+            }
+            if (foodItemNameInput.length() >= 1) {
+                System.out.println("you entered: " + foodItemNameInput);
+            }
+            tryToDeleteFoodItemFromShoppingItemList(foodItemNameInput);
+            onGoing = askForRepeat();
+        } while (onGoing);
+    }
 
-
-                    for (FoodItem foodItem : shoppingItemList.shoppingItemList) {
-                        if (foodItem.foodItemName.equals(foodItemNameInput)) {
-                            shoppingItemList.deleteFoodItem(foodItem);
-                            break;
-                        }
-                    }
-
-                    System.out.println("you have deleted: " + foodItemNameInput + " in your ShoppingItem List");
-
-                } else {
-                    System.out.println("Can't find " + foodItemNameInput + " in your ShoppingItem List");
+    private void tryToDeleteFoodItemFromShoppingItemList(String foodItemNameInput) {
+        if (shoppingItemList.containInShoppingItemList(foodItemNameInput)) {
+            for (FoodItem foodItem : shoppingItemList.getShoppingItemList()) {
+                if (foodItem.getFoodItemName().equals(foodItemNameInput)) {
+                    shoppingItemList.deleteFoodItem(foodItem);
+                    break;
                 }
             }
-            notEnd = askForRepeat();
+            System.out.println("you have deleted: " + foodItemNameInput + " in your ShoppingItem List");
+        } else {
+            System.out.println("Can't find " + foodItemNameInput + " in your ShoppingItem List");
         }
+
     }
 
     private void doMarkFoodItem() {
@@ -251,18 +245,12 @@ public class SmartFridgeApp {
             if (foodItemList.containInFoodItemList(foodItemNameInput)) {
                 askForChangingStatus(foodItemNameInput);
 
-
-                //System.out.println(foodItemList.foodItemList.get(0).status);
-
             } else {
                 System.out.println("Can't find " + foodItemNameInput + " in FoodItem list");
             }
             notEnd = askForRepeat();
         }
-
-
     }
-
 
     private void askForChangingStatus(String foodItemNameInput) {
         System.out.println("\nPlease enter one of the Status: type used or outofstock");
@@ -293,8 +281,8 @@ public class SmartFridgeApp {
     }
 
     private void changeFoodItemStatus(String foodItemNameInput, String choiceInput) {
-        for (FoodItem foodItem : foodItemList.foodItemList) {
-            if (foodItem.foodItemName.equals(foodItemNameInput)) {
+        for (FoodItem foodItem : foodItemList.getFoodItemList()) {
+            if (foodItem.getFoodItemName().equals(foodItemNameInput)) {
                 if (choiceInput.equals("used")) {
                     foodItem.markFoodItemStatus(FoodItem.Status.Used);
                 } else if (choiceInput.equals("outofstock")) {
@@ -327,14 +315,14 @@ public class SmartFridgeApp {
     private void doViewFoodItemList() {
 
 
-        if (foodItemList.foodItemList.isEmpty()) {
+        if (foodItemList.getFoodItemList().isEmpty()) {
             System.out.println("FoodItem list is empty");
         } else {
-            for (FoodItem foodItem : foodItemList.foodItemList) {
-                System.out.println(foodItem.foodItemName);
-                System.out.println("Purchased date: " + foodItem.milliSecondToDate(foodItem.purchasedDateinMilli));
-                System.out.println("Expiry date: " + foodItem.milliSecondToDate(foodItem.expiryDateInMilli));
-                System.out.println("Food Status: " + foodItem.status);
+            for (FoodItem foodItem : foodItemList.getFoodItemList()) {
+                System.out.println(foodItem.getFoodItemName());
+                System.out.println("Purchased date: " + foodItem.milliSecondToDate(foodItem.getPurchasedDateinMilli()));
+                System.out.println("Expiry date: " + foodItem.milliSecondToDate(foodItem.getExpiryDateInMilli()));
+                System.out.println("Food Status: " + foodItem.getStatus());
 
             }
         }
@@ -347,14 +335,14 @@ public class SmartFridgeApp {
 
         expiryFoodItemList = foodItemList.returnExpiryFoodItem();
 
-        if (expiryFoodItemList.foodItemList.isEmpty()) {
+        if (expiryFoodItemList.getFoodItemList().isEmpty()) {
             System.out.println("Expiry FoodItem list is empty");
         } else {
-            for (FoodItem foodItem : expiryFoodItemList.foodItemList) {
-                System.out.println(foodItem.foodItemName);
-                System.out.println("Purchased date: " + foodItem.purchasedDateinMilli);
-                System.out.println("Expiry date: " + foodItem.expiryDateInMilli);
-                System.out.println("Food Status: " + foodItem.status);
+            for (FoodItem foodItem : expiryFoodItemList.getFoodItemList()) {
+                System.out.println(foodItem.getFoodItemName());
+                System.out.println("Purchased date: " + foodItem.getPurchasedDateinMilli());
+                System.out.println("Expiry date: " + foodItem.getExpiryDateInMilli());
+                System.out.println("Food Status: " + foodItem.getStatus());
 
             }
         }
@@ -365,11 +353,11 @@ public class SmartFridgeApp {
     private void doViewShoppingItemList() {
 
 
-        if (shoppingItemList.shoppingItemList.isEmpty()) {
+        if (shoppingItemList.getShoppingItemList().isEmpty()) {
             System.out.println("ShoppingItem list is empty");
         } else {
-            for (FoodItem foodItem : shoppingItemList.shoppingItemList) {
-                System.out.println(foodItem.foodItemName);
+            for (FoodItem foodItem : shoppingItemList.getShoppingItemList()) {
+                System.out.println(foodItem.getFoodItemName());
             }
         }
 
