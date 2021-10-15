@@ -5,6 +5,7 @@ import java.util.List;
 
 
 public class FoodItemList {
+
     public List<FoodItem> foodItemList;
 
     // Effects: FoodItemList is empty
