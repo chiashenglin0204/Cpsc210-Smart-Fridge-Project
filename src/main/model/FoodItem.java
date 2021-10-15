@@ -38,25 +38,25 @@ public class FoodItem {
         return expired;
     }
 
-    public void setFoodItemName(String foodItemName) {
+    /*public void setFoodItemName(String foodItemName) {
         this.foodItemName = foodItemName;
-    }
+    }*/
 
-    public void setPurchasedDateinMilli(long purchasedDateinMilli) {
+    /*public void setPurchasedDateinMilli(long purchasedDateinMilli) {
         this.purchasedDateinMilli = purchasedDateinMilli;
-    }
+    }*/
 
-    public void setExpiryDateInMilli(long expiryDateInMilli) {
+    /*public void setExpiryDateInMilli(long expiryDateInMilli) {
         this.expiryDateInMilli = expiryDateInMilli;
-    }
+    }*/
 
-    public void setStatus(Status status) {
+   /* public void setStatus(Status status) {
         this.status = status;
-    }
+    }*/
 
-    public void setExpired(boolean expired) {
+   /* public void setExpired(boolean expired) {
         this.expired = expired;
-    }
+    }*/
 
     // Effect: get the local time now
     public static long getLocalTime() {

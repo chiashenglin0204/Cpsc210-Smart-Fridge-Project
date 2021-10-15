@@ -10,9 +10,9 @@ public class ShoppingItemList {
         return shoppingItemList;
     }
 
-    public void setShoppingItemList(List<FoodItem> shoppingItemList) {
+    /*public void setShoppingItemList(List<FoodItem> shoppingItemList) {
         this.shoppingItemList = shoppingItemList;
-    }
+    }*/
 
     // Effects: ShoppingItemList is empty
     public ShoppingItemList() {

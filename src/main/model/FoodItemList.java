@@ -12,9 +12,9 @@ public class FoodItemList {
         return foodItemList;
     }
 
-    public void setFoodItemList(List<FoodItem> foodItemList) {
+    /*public void setFoodItemList(List<FoodItem> foodItemList) {
         this.foodItemList = foodItemList;
-    }
+    }*/
 
     // Effects: FoodItemList is empty
     public FoodItemList() {

@@ -21,6 +21,8 @@ public class FoodItemTest {
     public void testMarkFoodItemStatus() {
         foodItem.markFoodItemStatus(FoodItem.Status.Used);
         assertEquals(FoodItem.Status.Used, foodItem.getStatus());
+        assertEquals("banana", foodItem.getFoodItemName());
+
 
         foodItem.markFoodItemStatus(FoodItem.Status.OutOfStock);
         assertEquals(FoodItem.Status.OutOfStock, foodItem.getStatus());
@@ -30,6 +32,7 @@ public class FoodItemTest {
 
     @Test
     public void testMarkExpiryFoodItem() {
+        assertEquals(444332,foodItem.getExpiryDateInMilli());
         FoodItem banana = new FoodItem("banana", 2020,
                 FoodItem.getLocalTime() + 20);
         banana.markExpiryFoodItem();
