@@ -19,13 +19,15 @@ Everyone who's into cooking or buying food from outside
 
 ## Why this project interest you?:
 Because I waste tons of food due to the unawareness of expiry date, 
-so I want to build a helper for myself to track my FoodItem, also I always forgoy
+so I want to build a helper for myself to track my FoodItem, also I always forgot
 what I need to buy, so I want to build a shoppingItem list for myself to remind me to 
 buy all the foodItem in the list
 
 ## Users Stories:
 - As a user, I want to be able to add/delete a foodItem in my ShoppingItem list
 - As a user, I want to be able to add/delete a foodItem in my FoodItem list
-- As a user, I want to be able to view the list of foodItem in my ShoppingItem list and FoodItem list
-- As a user, I want to be able to mark a foodItem in FoodItem list as Used, OutofStock 
-- As a user, I want to be able to see the expiry FoodItems in my FoodItem list
+- As a user, I want to be able to view the list of foodItem in my ShoppingItem list 
+- As a user, I want to be able to view the list of foodItem in my FoodItem list with its purchase date and expiry date.
+- As a user, I want to be able to mark a foodItem in FoodItem list as Used and Out of Stock 
+- As a user, I want to be able to view the list of expiry FoodItems in my 
+FoodItem list with its purchase date and expiry date.
