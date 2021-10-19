@@ -31,3 +31,6 @@ buy all the foodItem in the list
 - As a user, I want to be able to mark a foodItem in FoodItem list as Used and Out of Stock 
 - As a user, I want to be able to view the list of expiry FoodItems in my 
 FoodItem list with its purchase date and expiry date.
+- As a user, when I select the quit option from the application menu, I want to be reminded to save my current 
+FoodItem list and ShoppingItem list, and have the option to do so or not.
+- As a user, when I start the application, I want to be given the option to load my FoodItem and ShoppingItem list from file.
