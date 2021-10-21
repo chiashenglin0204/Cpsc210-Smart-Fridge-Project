@@ -33,4 +33,5 @@ buy all the foodItem in the list
 FoodItem list with its purchase date and expiry date.
 - As a user, when I select the quit option from the application menu, I want to be reminded to save my current 
 FoodItem list and ShoppingItem list, and have the option to do so or not.
-- As a user, when I start the application, I want to be given the option to load my FoodItem and ShoppingItem list from file.
+- As a user, when I start the application, I want to be given the option to load my FoodItem and ShoppingItem list from 
+file.
