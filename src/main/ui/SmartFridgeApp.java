@@ -3,21 +3,36 @@ package ui;
 import model.FoodItem;
 import model.FoodItemList;
 import model.ShoppingItemList;
+import persistence.JsonReaderShoppingItemList;
+import persistence.JsonReaderFoodItemList;
+import persistence.JsonWriterFoodItemList;
+import persistence.JsonWriterShoppingItemList;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
 public class SmartFridgeApp {
+    private static final String JSON_STORE_FoodItemList = "./data/foodItem.json";
+    private static final String JSON_STORE_ShoppingItemList = "./data/shoppingItem.json";
     private FoodItemList foodItemList = new FoodItemList();
     private ShoppingItemList shoppingItemList = new ShoppingItemList();
     private FoodItemList expiryFoodItemList = new FoodItemList();
     private Scanner input;
+    private JsonWriterFoodItemList jsonWriterFoodItemList;
+    private JsonWriterShoppingItemList jsonWriterShoppingItemList;
+    private JsonReaderFoodItemList jsonReaderFoodItemList;
+    private JsonReaderShoppingItemList jsonReaderShoppingItemList;
 
-    public SmartFridgeApp() throws ParseException {
+    public SmartFridgeApp() throws ParseException, FileNotFoundException {
+        jsonWriterFoodItemList = new JsonWriterFoodItemList(JSON_STORE_FoodItemList);
+        jsonWriterShoppingItemList = new JsonWriterShoppingItemList(JSON_STORE_ShoppingItemList);
+        jsonReaderShoppingItemList = new JsonReaderShoppingItemList(JSON_STORE_ShoppingItemList);
+        jsonReaderFoodItemList = new JsonReaderFoodItemList(JSON_STORE_FoodItemList);
         runSmartFridge();
-
     }
 
     private void runSmartFridge() throws ParseException {
@@ -58,11 +73,24 @@ public class SmartFridgeApp {
             doViewExpiryItem();
         } else if (command.equals("8")) {
             doMarkFoodItem();
+        } else if (command.equals("s")) {
+            save();
+        } else if (command.equals("l")) {
+            load();
         } else {
             System.out.println("Selection not valid...");
         }
     }
 
+    private void save() {
+        saveFoodItemList();
+        saveShoppingItemList();
+    }
+
+    private void load() {
+        loadFoodItemList();
+        loadShoppingItemList();
+    }
 
     private void init() {
         shoppingItemList = new ShoppingItemList();
@@ -82,6 +110,8 @@ public class SmartFridgeApp {
         System.out.println("\t6 -> view your ShoppingItem List");
         System.out.println("\t7 -> view your Expiry FoodItems");
         System.out.println("\t8 -> Mark your FoodItem in FoodItem List");
+        System.out.println("\ts -> Save your file");
+        System.out.println("\tl -> Load your file");
         System.out.println("\tq -> quit");
     }
 
@@ -103,7 +133,7 @@ public class SmartFridgeApp {
             System.out.println(foodItemList.getFoodItemList().get(0).getFoodItemName());
             System.out.println(
                     "Purchased date: " + foodItemList.getFoodItemList().get(0).milliSecondToDate(
-                            foodItem1.getPurchasedDateinMilli())
+                            foodItem1.getPurchasedDateInMilli())
             );
             System.out.println(
                     "Expiry date: "
@@ -255,7 +285,6 @@ public class SmartFridgeApp {
     private void askForChangingStatus(String foodItemNameInput) {
         System.out.println("\nPlease enter one of the Status: type used or outofstock");
         String choiceInput;
-
         do {
             choiceInput = input.nextLine();
             if (choiceInput.length() >= 1) {
@@ -313,17 +342,14 @@ public class SmartFridgeApp {
     }
 
     private void doViewFoodItemList() {
-
-
         if (foodItemList.getFoodItemList().isEmpty()) {
             System.out.println("FoodItem list is empty");
         } else {
             for (FoodItem foodItem : foodItemList.getFoodItemList()) {
                 System.out.println(foodItem.getFoodItemName());
-                System.out.println("Purchased date: " + foodItem.milliSecondToDate(foodItem.getPurchasedDateinMilli()));
+                System.out.println("Purchased date: " + foodItem.milliSecondToDate(foodItem.getPurchasedDateInMilli()));
                 System.out.println("Expiry date: " + foodItem.milliSecondToDate(foodItem.getExpiryDateInMilli()));
                 System.out.println("Food Status: " + foodItem.getStatus());
-
             }
         }
 
@@ -331,8 +357,6 @@ public class SmartFridgeApp {
     }
 
     private void doViewExpiryItem() {
-
-
         expiryFoodItemList = foodItemList.returnExpiryFoodItem();
 
         if (expiryFoodItemList.getFoodItemList().isEmpty()) {
@@ -340,7 +364,7 @@ public class SmartFridgeApp {
         } else {
             for (FoodItem foodItem : expiryFoodItemList.getFoodItemList()) {
                 System.out.println(foodItem.getFoodItemName());
-                System.out.println("Purchased date: " + foodItem.getPurchasedDateinMilli());
+                System.out.println("Purchased date: " + foodItem.getPurchasedDateInMilli());
                 System.out.println("Expiry date: " + foodItem.getExpiryDateInMilli());
                 System.out.println("Food Status: " + foodItem.getStatus());
 
@@ -351,8 +375,6 @@ public class SmartFridgeApp {
 
 
     private void doViewShoppingItemList() {
-
-
         if (shoppingItemList.getShoppingItemList().isEmpty()) {
             System.out.println("ShoppingItem list is empty");
         } else {
@@ -361,6 +383,52 @@ public class SmartFridgeApp {
             }
         }
 
+    }
+
+    // EFFECTS: saves the foodItemList to file
+    private void saveFoodItemList() {
+        try {
+            jsonWriterFoodItemList.open();
+            jsonWriterFoodItemList.write(foodItemList);
+            jsonWriterFoodItemList.close();
+            System.out.println("Saved " + foodItemList + " to " + JSON_STORE_FoodItemList);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE_FoodItemList);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads foodItemList from file
+    private void loadFoodItemList() {
+        try {
+            foodItemList = jsonReaderFoodItemList.readFoodItemList();
+            System.out.println("Loaded " + foodItemList + " from " + JSON_STORE_FoodItemList);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE_FoodItemList);
+        }
+    }
+
+    // EFFECTS: saves the shoppingItemList to file
+    private void saveShoppingItemList() {
+        try {
+            jsonWriterShoppingItemList.open();
+            jsonWriterShoppingItemList.write(shoppingItemList);
+            jsonWriterShoppingItemList.close();
+            System.out.println("Saved " + shoppingItemList + " to " + JSON_STORE_ShoppingItemList);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE_ShoppingItemList);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads shoppingItemList from file
+    private void loadShoppingItemList() {
+        try {
+            shoppingItemList = jsonReaderShoppingItemList.readShoppingItemList();
+            System.out.println("Loaded " + shoppingItemList + " from " + JSON_STORE_ShoppingItemList);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE_ShoppingItemList);
+        }
     }
 
 

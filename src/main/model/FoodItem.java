@@ -1,11 +1,14 @@
 package model;
 
 
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.Date;
 
-public class FoodItem {
+public class FoodItem implements Writable {
     private String foodItemName;
-    private long purchasedDateinMilli;
+    private long purchasedDateInMilli;
     private long expiryDateInMilli;
 
     private Status status;
@@ -26,8 +29,8 @@ public class FoodItem {
         return status;
     }
 
-    public long getPurchasedDateinMilli() {
-        return purchasedDateinMilli;
+    public long getPurchasedDateInMilli() {
+        return purchasedDateInMilli;
     }
 
     public long getExpiryDateInMilli() {
@@ -67,7 +70,7 @@ public class FoodItem {
 
     public FoodItem(String foodItemName, long purchasedDate, long expiryDate) {
         this.foodItemName = foodItemName;
-        this.purchasedDateinMilli = purchasedDate;
+        this.purchasedDateInMilli = purchasedDate;
         this.expiryDateInMilli = expiryDate;
 
         this.expired = false;
@@ -95,5 +98,13 @@ public class FoodItem {
         return result;
     }
 
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("foodItemName", foodItemName);
+        json.put("purchasedDateInMilli", purchasedDateInMilli);
+        json.put("expiryDateInMilli", expiryDateInMilli);
+        return json;
+    }
 
 }

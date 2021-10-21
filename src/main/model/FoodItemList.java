@@ -1,10 +1,14 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class FoodItemList {
+public class FoodItemList implements Writable {
 
     private List<FoodItem> foodItemList;
 
@@ -57,6 +61,24 @@ public class FoodItemList {
             }
         }
         return false;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("foodItems", foodItemsToJson());
+        return json;
+    }
+
+    // EFFECTS: returns things in this workroom as a JSON array
+    private JSONArray foodItemsToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (FoodItem foodItem : foodItemList) {
+            jsonArray.put(foodItem.toJson());
+        }
+
+        return jsonArray;
     }
 
 

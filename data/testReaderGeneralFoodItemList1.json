@@ -1,0 +1,12 @@
+{"foodItems": [
+    {
+        "purchasedDateInMilli": 1611993600000,
+        "expiryDateInMilli": 1612080000000,
+        "foodItemName": "ChiaSheng"
+    },
+    {
+        "purchasedDateInMilli": 1634626800000,
+        "expiryDateInMilli": 1634799600000,
+        "foodItemName": "Taipei"
+    }
+]}

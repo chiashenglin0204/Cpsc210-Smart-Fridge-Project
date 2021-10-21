@@ -48,7 +48,7 @@ public class FoodItemTest {
     @Test
     public void testMilliSecondToDate()  {
 
-        assertEquals(new Date(foodItem.getPurchasedDateinMilli()), foodItem.milliSecondToDate(foodItem.getPurchasedDateinMilli()));
+        assertEquals(new Date(foodItem.getPurchasedDateInMilli()), foodItem.milliSecondToDate(foodItem.getPurchasedDateInMilli()));
     }
 
 }
