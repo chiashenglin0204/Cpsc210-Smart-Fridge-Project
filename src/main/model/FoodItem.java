@@ -8,6 +8,8 @@ import java.util.Date;
 
 public class FoodItem implements Writable {
     private String foodItemName;
+    private DateFoodItem purchasedDate;
+    private DateFoodItem expiryDate;
     private long purchasedDateInMilli;
     private long expiryDateInMilli;
 

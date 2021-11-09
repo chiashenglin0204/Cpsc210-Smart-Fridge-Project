@@ -8,12 +8,17 @@ import persistence.JsonReaderFoodItemList;
 import persistence.JsonWriterFoodItemList;
 import persistence.JsonWriterShoppingItemList;
 
+import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
 
 public class SmartFridgeApp {
     private static final String JSON_STORE_FoodItemList = "./data/foodItem.json";
@@ -27,11 +32,58 @@ public class SmartFridgeApp {
     private JsonReaderFoodItemList jsonReaderFoodItemList;
     private JsonReaderShoppingItemList jsonReaderShoppingItemList;
 
+    public static final int frameWidth = 400;
+    public static final int frameHeight = 400;
+
+    public static final int buttonWidth = 135;
+    public static final int buttonHeight = 30;
+
+
     public SmartFridgeApp() throws ParseException, FileNotFoundException {
         jsonWriterFoodItemList = new JsonWriterFoodItemList(JSON_STORE_FoodItemList);
         jsonWriterShoppingItemList = new JsonWriterShoppingItemList(JSON_STORE_ShoppingItemList);
         jsonReaderShoppingItemList = new JsonReaderShoppingItemList(JSON_STORE_ShoppingItemList);
         jsonReaderFoodItemList = new JsonReaderFoodItemList(JSON_STORE_FoodItemList);
+
+
+        JFrame frame = new JFrame("Smart Fridge");
+        JPanel panel = new JPanel();
+        panel.setSize(frameWidth, frameHeight);
+        panel.setBackground(Color.gray);
+
+
+
+        JButton button = new JButton("clicker here");
+        button.setVisible(true);
+        button.setBounds(50, 100, buttonWidth, buttonHeight);
+        Color backgroundColor = new Color(4, 99, 7);
+        button.setBackground(backgroundColor);
+        button.setOpaque(true);
+        frame.add(panel, BorderLayout.CENTER);
+
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JLabel label = new JLabel("next performed");
+                label.setBounds(50,50, 100,30);
+                panel.add(label, BorderLayout.CENTER);
+                final JTextField textField = new JTextField();
+                textField.setBounds(50, 50, 150, 20);
+                textField.setText("Welcome to Javatpoint.");
+                textField.setBackground(Color.WHITE);
+                panel.add(textField);
+            }
+        });
+
+        panel.add(button, BorderLayout.CENTER);
+        panel.setVisible(true);
+
+
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(frameWidth, frameHeight);
+
+
         runSmartFridge();
     }
 
