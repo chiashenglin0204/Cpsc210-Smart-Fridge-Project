@@ -1,6 +1,7 @@
 package persistence;
 
 
+import model.DateFoodItem;
 import model.FoodItem;
 import model.FoodItemList;
 import org.junit.jupiter.api.Test;
@@ -49,8 +50,16 @@ class JsonWriterFoodItemListTest extends JsonTest {
     void testWriterGeneralFoodItemList() {
         try {
             FoodItemList foodItemList = new FoodItemList();
-            foodItemList.addFoodItem(new FoodItem("ChiaSheng" , 1611993600000L, 1612080000000L));
-            foodItemList.addFoodItem(new FoodItem("Taipei" , 1634626800000L, 1634799600000L));
+            DateFoodItem purchaseDate = new DateFoodItem();
+            DateFoodItem expiryDate = new DateFoodItem();
+            DateFoodItem purchaseDate1 = new DateFoodItem();
+            DateFoodItem expiryDate1 = new DateFoodItem();
+            foodItemList.addFoodItem(new FoodItem("ChiaSheng",
+                    purchaseDate.dateStringToMilli("2021/02/04"),
+                    expiryDate.dateStringToMilli("2021/02/05")));
+            foodItemList.addFoodItem(new FoodItem("Taipei",
+                    purchaseDate1.dateStringToMilli("2020/02/06"),
+                    expiryDate1.dateStringToMilli("2020/02/08")));
             JsonWriterFoodItemList writer = new JsonWriterFoodItemList("./data/testWriterGeneralFoodItemList.json");
             writer.open();
             writer.write(foodItemList);
@@ -60,10 +69,15 @@ class JsonWriterFoodItemListTest extends JsonTest {
             foodItemList = reader.readFoodItemList();
             List<FoodItem> foodItems = foodItemList.getFoodItemList();
             assertEquals(2, foodItems.size());
-            checkFoodItem("ChiaSheng", 1611993600000L, 1612080000000L, foodItems.get(0)); //todo here
-            checkFoodItem("Taipei", 1634626800000L, 1634799600000L, foodItems.get(1));
+            checkFoodItem("ChiaSheng",
+                    "2021/02/04",
+                    "2021/02/05", foodItems.get(0)); //todo here
+            checkFoodItem("Taipei",
+                    "2020/02/06",
+                    "2020/02/08", foodItems.get(1));
 
         } catch (IOException e) {
             fail("Exception should not have been thrown");
         }
-    }}
+    }
+}

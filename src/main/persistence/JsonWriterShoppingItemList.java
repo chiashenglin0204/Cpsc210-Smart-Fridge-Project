@@ -1,14 +1,16 @@
 package persistence;
 
+import model.DateFoodItem;
 import model.FoodItemList;
 import model.ShoppingItemList;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 
 import java.io.*;
 
 // Represents a writer that writes JSON representation of workroom to file
-public class JsonWriterShoppingItemList  {
+public class JsonWriterShoppingItemList {
     private static final int TAB = 4;
     private PrintWriter writer;
     private String destination;
@@ -28,7 +30,19 @@ public class JsonWriterShoppingItemList  {
     // MODIFIES: this
     // EFFECTS: writes JSON representation of workroom to file
     public void write(ShoppingItemList shoppingItemList) {
-        JSONObject json = shoppingItemList.toJson();
+        JSONObject json = new JSONObject();
+        JSONArray array = new JSONArray();
+        for (int i = 0; i < shoppingItemList.getShoppingItemList().size(); i++) {
+            JSONObject element = new JSONObject();
+            element.put("foodItemName", shoppingItemList.getShoppingItemList().get(i).getFoodItemName());
+            element.put("expiryDate", shoppingItemList.getShoppingItemList().get(i).getExpiryDate().getDateInString());
+            element.put("purchasedDate",
+                    shoppingItemList.getShoppingItemList().get(i).getPurchasedDate().getDateInString());
+            array.put(element);
+        }
+
+        json.put("shoppingItems", array);
+        shoppingItemList.toJson();
         saveToFile(json.toString(TAB));
     }
 

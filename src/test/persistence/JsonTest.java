@@ -1,13 +1,14 @@
 package persistence;
+import model.DateFoodItem;
 import model.FoodItem;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class JsonTest {
     protected void checkFoodItem(
-            String foodItemName, long purchasedDateInMilli , long expiryDateInMilli, FoodItem foodItem) {
+            String foodItemName, String purchasedDate, String expiryDate, FoodItem foodItem) {
         assertEquals(foodItemName, foodItem.getFoodItemName());
-        assertEquals(purchasedDateInMilli, foodItem.getPurchasedDateInMilli());
-        assertEquals(expiryDateInMilli, foodItem.getExpiryDateInMilli());
+        assertEquals(purchasedDate, foodItem.getPurchasedDate().getDateInString());
+        assertEquals(expiryDate, foodItem.getExpiryDate().getDateInString());
     }
 
 }

@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ShoppingItemListTest {
     private ShoppingItemList shoppingItemList;
-    private FoodItem banana = new FoodItem("banana", 0, 0);
-    private FoodItem apple = new FoodItem("apple", 1021, 1017);
+    private FoodItem banana = new FoodItem("banana", new DateFoodItem(), new DateFoodItem());
+    private FoodItem apple = new FoodItem("apple", new DateFoodItem(), new DateFoodItem());
 
     @BeforeEach
     public void runBefore(){

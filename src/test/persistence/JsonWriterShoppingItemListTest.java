@@ -1,6 +1,7 @@
 package persistence;
 
 
+import model.DateFoodItem;
 import model.FoodItem;
 import model.FoodItemList;
 import model.ShoppingItemList;
@@ -50,8 +51,10 @@ class JsonWriterShoppingItemListTest extends JsonTest {
     void testWriterGeneralShoppingItemList() {
         try {
             ShoppingItemList shoppingItemList = new ShoppingItemList();
-            shoppingItemList.addFoodItem(new FoodItem("ChiaSheng" , 0, 0));
-            shoppingItemList.addFoodItem(new FoodItem("Taipei" , 0, 0));
+            DateFoodItem emptyPurchaseDate = new DateFoodItem();
+            DateFoodItem emptyExpiryDate = new DateFoodItem();
+            shoppingItemList.addFoodItem(new FoodItem("ChiaSheng", emptyPurchaseDate, emptyExpiryDate));
+            shoppingItemList.addFoodItem(new FoodItem("Taipei", emptyPurchaseDate, emptyExpiryDate));
             JsonWriterShoppingItemList writer = new JsonWriterShoppingItemList("./data/testWriterGeneralShoppingItemList.json");
             writer.open();
             writer.write(shoppingItemList);
@@ -61,11 +64,12 @@ class JsonWriterShoppingItemListTest extends JsonTest {
             shoppingItemList = reader.readShoppingItemList();
             List<FoodItem> shoppingItems = shoppingItemList.getShoppingItemList();
             assertEquals(2, shoppingItems.size());
-            checkFoodItem("ChiaSheng", 0, 0, shoppingItems.get(0)); //todo here
-            checkFoodItem("Taipei", 0, 0, shoppingItems.get(1));
+            checkFoodItem("ChiaSheng", "", "", shoppingItems.get(0)); //todo here
+            checkFoodItem("Taipei", "", "", shoppingItems.get(1));
 
         } catch (IOException e) {
             fail("Exception should not have been thrown");
         }
-    }}
+    }
+}
 

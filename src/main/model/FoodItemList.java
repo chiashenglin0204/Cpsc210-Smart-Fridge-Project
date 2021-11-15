@@ -44,7 +44,7 @@ public class FoodItemList implements Writable {
     public FoodItemList returnExpiryFoodItem() {
         FoodItemList expiredFoodItemList = new FoodItemList();
         for (FoodItem foodItem : foodItemList) {
-            foodItem.markExpiryFoodItem();
+            foodItem.checkExpiryFoodItem();
             if (foodItem.isExpired()) {
                 expiredFoodItemList.addFoodItem(foodItem);
             }

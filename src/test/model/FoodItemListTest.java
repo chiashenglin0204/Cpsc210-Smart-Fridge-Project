@@ -3,13 +3,21 @@ package model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import model.FoodItem;
 
 
 public class FoodItemListTest {
     private FoodItemList foodItemList;
-    private FoodItem banana = new FoodItem("banana", 1011, 1021);
-    private FoodItem apple = new FoodItem("apple", 1021, 1017);
-    private FoodItem melon = new FoodItem("melon", 1021, FoodItem.getLocalTime()+30);
+    private DateFoodItem expiryDate = new DateFoodItem();
+    private FoodItem banana = new FoodItem("banana",
+            new DateFoodItem().dateMilliToString(1011) ,
+            new DateFoodItem().dateMilliToString(1021));
+    private FoodItem apple = new FoodItem("apple",
+            new DateFoodItem().dateMilliToString(1021) ,
+            new DateFoodItem().dateMilliToString(1017));
+    private FoodItem melon = new FoodItem("melon",
+            new DateFoodItem().dateMilliToString(1021),
+            expiryDate.dateMilliToString(new FoodItem("shdfushdf", new DateFoodItem(), new DateFoodItem()).getLocalTime()+30));
 
 
     @BeforeEach

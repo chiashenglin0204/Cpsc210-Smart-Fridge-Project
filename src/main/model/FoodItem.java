@@ -4,14 +4,14 @@ package model;
 import org.json.JSONObject;
 import persistence.Writable;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class FoodItem implements Writable {
     private String foodItemName;
     private DateFoodItem purchasedDate;
     private DateFoodItem expiryDate;
-    private long purchasedDateInMilli;
-    private long expiryDateInMilli;
+
 
     private Status status;
     private boolean expired;
@@ -31,53 +31,29 @@ public class FoodItem implements Writable {
         return status;
     }
 
-    public long getPurchasedDateInMilli() {
-        return purchasedDateInMilli;
+    public DateFoodItem getPurchasedDate() {
+        return purchasedDate;
     }
 
-    public long getExpiryDateInMilli() {
-        return expiryDateInMilli;
+    public DateFoodItem getExpiryDate() {
+        return expiryDate;
     }
 
     public boolean isExpired() {
         return expired;
     }
 
-    /*public void setFoodItemName(String foodItemName) {
-        this.foodItemName = foodItemName;
-    }*/
-
-    /*public void setPurchasedDateinMilli(long purchasedDateinMilli) {
-        this.purchasedDateinMilli = purchasedDateinMilli;
-    }*/
-
-    /*public void setExpiryDateInMilli(long expiryDateInMilli) {
-        this.expiryDateInMilli = expiryDateInMilli;
-    }*/
-
-   /* public void setStatus(Status status) {
-        this.status = status;
-    }*/
-
-   /* public void setExpired(boolean expired) {
-        this.expired = expired;
-    }*/
-
-    // Effect: get the local time now
-    public static long getLocalTime() {
-        Date date = new Date();
-        long timeMilli = date.getTime();
-        return timeMilli;
+    public long getLocalTime() {
+        return Calendar.getInstance().getTimeInMillis();
     }
 
-    public FoodItem(String foodItemName, long purchasedDate, long expiryDate) {
-        this.foodItemName = foodItemName;
-        this.purchasedDateInMilli = purchasedDate;
-        this.expiryDateInMilli = expiryDate;
+    public FoodItem(String foodItemName, DateFoodItem purchasedDate, DateFoodItem expiryDate) {
 
+        this.foodItemName = foodItemName;
+        this.purchasedDate = purchasedDate;
+        this.expiryDate = expiryDate;
         this.expired = false;
         this.status = Status.New;
-
     }
 
     //Require: Only input status "Used" "OutOfStock"
@@ -87,8 +63,8 @@ public class FoodItem implements Writable {
     }
 
     //Effect: Change expired to true if current time is bigger than expiryDate
-    public void markExpiryFoodItem() {
-        if (getLocalTime() > expiryDateInMilli) {
+    public void checkExpiryFoodItem() {
+        if (getLocalTime() > this.expiryDate.getDateInMilli()) {
             expired = true;
         }
     }
@@ -104,8 +80,8 @@ public class FoodItem implements Writable {
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("foodItemName", foodItemName);
-        json.put("purchasedDateInMilli", purchasedDateInMilli);
-        json.put("expiryDateInMilli", expiryDateInMilli);
+        json.put("purchasedDate", purchasedDate);
+        json.put("expiryDate", expiryDate);
         return json;
     }
 
