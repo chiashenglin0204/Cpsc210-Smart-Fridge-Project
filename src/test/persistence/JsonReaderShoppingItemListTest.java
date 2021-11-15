@@ -1,4 +1,5 @@
 package persistence;
+import model.DateFoodItem;
 import model.FoodItem;
 import model.ShoppingItemList;
 import org.junit.jupiter.api.Test;
@@ -43,11 +44,11 @@ public class JsonReaderShoppingItemListTest extends JsonTest {
 //            System.out.println(foodItems);
             assertEquals(2, shoppingItemList.getShoppingItemList().size());
             checkFoodItem(
-                    "ChiaSheng", 0,
-                    0, shoppingItems.get(0));
+                    "ChiaSheng", "",
+                    "", shoppingItems.get(0));
             checkFoodItem(
-                    "Taipei", 0,
-                    0, shoppingItems.get(1));
+                    "Taipei", "",
+                    "", shoppingItems.get(1)); //todo here
 
         } catch (IOException e) {
             fail("Couldn't read from file");

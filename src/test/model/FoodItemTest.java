@@ -4,16 +4,24 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
-import java.util.Date;
+import java.util.Calendar;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FoodItemTest {
     private FoodItem foodItem;
+    private DateFoodItem purchasedDate;
+    private DateFoodItem expiryDate;
+
+    public long getLocalTime() {
+        return Calendar.getInstance().getTimeInMillis();
+    }
 
     @BeforeEach
     public void runBefore() {
-        foodItem = new FoodItem("banana", 234762, 444332);
+        purchasedDate=new DateFoodItem().dateStringToMilli("2021/01/30");
+        expiryDate=new DateFoodItem().dateStringToMilli("2021/02/04");
+        foodItem = new FoodItem("banana", purchasedDate, expiryDate);
     }
 
 
@@ -32,26 +40,35 @@ public class FoodItemTest {
 
     @Test
     public void testMarkExpiryFoodItem() {
-        assertEquals(444332,foodItem.getExpiryDateInMilli());
-        FoodItem banana = new FoodItem("banana", 2020,
-                FoodItem.getLocalTime() + 20);
-        banana.markExpiryFoodItem();
+        assertEquals("2021/02/04",foodItem.getExpiryDate().getDateInString());
+        DateFoodItem purchaseDate1 = new DateFoodItem();
+        DateFoodItem expiryDate1 = new DateFoodItem();
+
+        purchaseDate1.dateMilliToString(202020);
+        expiryDate1.dateMilliToString(getLocalTime()+20);
+        FoodItem banana = new FoodItem("banana",purchaseDate1,
+                expiryDate1);
+        banana.checkExpiryFoodItem();
         assertFalse(banana.isExpired());
 
-        FoodItem apple = new FoodItem("apple", 2020,
-                FoodItem.getLocalTime() - 20);
-        apple.markExpiryFoodItem();
+        DateFoodItem purchaseDate2 = new DateFoodItem();
+        DateFoodItem expiryDate2 = new DateFoodItem();
+        purchaseDate2.dateMilliToString(202020);
+        expiryDate2.dateMilliToString(getLocalTime()-20);
+        FoodItem apple = new FoodItem("apple",purchaseDate2,
+                expiryDate2);
+        apple.checkExpiryFoodItem();
+
         assertTrue(apple.isExpired());
-
     }
 
 
 
 
-    @Test
-    public void testMilliSecondToDate()  {
-
-        assertEquals(new Date(foodItem.getPurchasedDateInMilli()), foodItem.milliSecondToDate(foodItem.getPurchasedDateInMilli()));
-    }
+//    @Test
+//    public void testMilliSecondToDate()  {
+//
+//        assertEquals(new Date(foodItem.getPurchasedDateInMilli()), foodItem.milliSecondToDate(foodItem.getPurchasedDateInMilli()));
+//    }
 
 }

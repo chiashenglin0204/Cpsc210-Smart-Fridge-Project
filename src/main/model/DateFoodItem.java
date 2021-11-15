@@ -20,22 +20,21 @@ public class DateFoodItem {
         this.dateInMilli = 0;
     }
 
-    public long getLocalTimeInMilli() {
-        Date date = new Date();
-        long timeMilli = date.getTime();
-        return timeMilli;
+    public long getLocalTime() {
+        return Calendar.getInstance().getTimeInMillis();
     }
 
-    public void dateMilliToString(long dateInMilli) {
+    public DateFoodItem dateMilliToString(long dateInMilli) {
         this.dateInMilli = dateInMilli;
         Date date = new Date(dateInMilli);
         SimpleDateFormat sdf = new SimpleDateFormat(datePattern);
         sdf.setTimeZone(TimeZone.getTimeZone(timezoneCode));
         String formattedDate = sdf.format(date);
         this.dateInString = formattedDate;
+        return  this;
     }
 
-    public void dateStringToMilli(String dateInString) {
+    public DateFoodItem dateStringToMilli(String dateInString) {
         try {
             this.dateInString = dateInString;
             SimpleDateFormat sdf = new SimpleDateFormat(datePattern);
@@ -45,6 +44,7 @@ public class DateFoodItem {
         } catch (ParseException e) {
             fail("invalid date input");
         }
+        return this;
     }
 
     public String getDateInString() {

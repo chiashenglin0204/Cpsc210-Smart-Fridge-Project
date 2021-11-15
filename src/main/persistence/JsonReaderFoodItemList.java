@@ -1,5 +1,6 @@
 package persistence;
 
+import model.DateFoodItem;
 import model.FoodItem;
 import model.FoodItemList;
 
@@ -64,10 +65,13 @@ public class JsonReaderFoodItemList {
     // EFFECTS: parses foodItem from JSON object and adds it to foodItemList
     private void addFoodItemToFoodItemList(FoodItemList foodItemList, JSONObject jsonObject) {
         String foodItemName = jsonObject.getString("foodItemName");
-        long purchasedDateInMilli = jsonObject.getLong("purchasedDateInMilli");
-        long expiryDateInMilli = jsonObject.getLong("expiryDateInMilli");
+        DateFoodItem purchasedDate = new DateFoodItem();
+        purchasedDate.dateStringToMilli(jsonObject.get("purchasedDate").toString());
 
-        FoodItem foodItem = new FoodItem(foodItemName, purchasedDateInMilli, expiryDateInMilli);
+        DateFoodItem expiryDate = new DateFoodItem();
+        expiryDate.dateStringToMilli(jsonObject.get("expiryDate").toString());
+
+        FoodItem foodItem = new FoodItem(foodItemName, purchasedDate, expiryDate);
         foodItemList.addFoodItem(foodItem);
     }
 

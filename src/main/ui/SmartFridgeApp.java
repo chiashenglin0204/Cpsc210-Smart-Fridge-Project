@@ -1,5 +1,6 @@
 package ui;
 
+import model.DateFoodItem;
 import model.FoodItem;
 import model.FoodItemList;
 import model.ShoppingItemList;
@@ -12,15 +13,14 @@ import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
 
 
-public class SmartFridgeApp {
+public class SmartFridgeApp extends JFrame {
     private static final String JSON_STORE_FoodItemList = "./data/foodItem.json";
     private static final String JSON_STORE_ShoppingItemList = "./data/shoppingItem.json";
     private FoodItemList foodItemList = new FoodItemList();
@@ -31,13 +31,59 @@ public class SmartFridgeApp {
     private JsonWriterShoppingItemList jsonWriterShoppingItemList;
     private JsonReaderFoodItemList jsonReaderFoodItemList;
     private JsonReaderShoppingItemList jsonReaderShoppingItemList;
+    private DateFoodItem emptyDateFoodItem = new DateFoodItem();
 
-    public static final int frameWidth = 400;
-    public static final int frameHeight = 400;
-
+    public static final int frameWidth = 800;
+    public static final int frameHeight = 800;
+    public static final Color backgroundColor = Color.white;
     public static final int buttonWidth = 135;
     public static final int buttonHeight = 30;
+    public static final int labelWidth = frameWidth;
+    public static final int labelHeight = 30;
+    public static final int textFieldWidth = 200;
+    public static final int textFieldHeight = 30;
 
+
+    private JButton createButton(String displayText, int x, int y) {
+        JButton button = new JButton(displayText);
+        button.setVisible(true);
+        button.setBounds(x, y, buttonWidth, buttonHeight);
+        button.setBackground(backgroundColor);
+        button.setOpaque(true);
+        return button;
+    }
+
+    private JTextField createTextField(int x, int y) {
+        JTextField textField = new JTextField();
+        textField.setBounds(x, y, textFieldWidth, textFieldHeight);
+        textField.setOpaque(true);
+        return textField;
+    }
+
+    private JLabel createLabel(String displayText, int x, int y) {
+        JLabel label = new JLabel(displayText);
+        label.setBounds(x, y, labelWidth, labelHeight);
+        return label;
+    }
+
+    private JTable createTable() {
+        JTable table = new JTable();
+        return table;
+    }
+
+    private JPanel createPanel() {
+        JPanel panel = new JPanel();
+        panel.setSize(frameWidth, frameHeight);
+        panel.setBackground(backgroundColor);
+        return panel;
+    }
+
+    private JFrame createFrame(String title) {
+        JFrame frame = new JFrame(title);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(frameWidth, frameHeight);
+        return frame;
+    }
 
     public SmartFridgeApp() throws ParseException, FileNotFoundException {
         jsonWriterFoodItemList = new JsonWriterFoodItemList(JSON_STORE_FoodItemList);
@@ -46,53 +92,16 @@ public class SmartFridgeApp {
         jsonReaderFoodItemList = new JsonReaderFoodItemList(JSON_STORE_FoodItemList);
 
 
-        JFrame frame = new JFrame("Smart Fridge");
-        JPanel panel = new JPanel();
-        panel.setSize(frameWidth, frameHeight);
-        panel.setBackground(Color.gray);
-
-
-
-        JButton button = new JButton("clicker here");
-        button.setVisible(true);
-        button.setBounds(50, 100, buttonWidth, buttonHeight);
-        Color backgroundColor = new Color(4, 99, 7);
-        button.setBackground(backgroundColor);
-        button.setOpaque(true);
-        frame.add(panel, BorderLayout.CENTER);
-
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JLabel label = new JLabel("next performed");
-                label.setBounds(50,50, 100,30);
-                panel.add(label, BorderLayout.CENTER);
-                final JTextField textField = new JTextField();
-                textField.setBounds(50, 50, 150, 20);
-                textField.setText("Welcome to Javatpoint.");
-                textField.setBackground(Color.WHITE);
-                panel.add(textField);
-            }
-        });
-
-        panel.add(button, BorderLayout.CENTER);
-        panel.setVisible(true);
-
-
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(frameWidth, frameHeight);
-
-
         runSmartFridge();
     }
+
 
     private void runSmartFridge() throws ParseException {
         boolean keepgoing = true;
         String command = null;
         init();
         while (keepgoing) {
-            displayMenu();
+            displayMenu1();
             command = input.next();
             command = command.toLowerCase();
 
@@ -152,6 +161,341 @@ public class SmartFridgeApp {
         expiryFoodItemList = new FoodItemList();
     }
 
+    private void displayMenu1() {
+        JFrame frame = createFrame("Smart Fridge");
+        JPanel panel = createPanel();
+        frame.add(panel, BorderLayout.CENTER);
+
+        JButton button = addFoodItemToFoodItemListButton();
+        JButton button1 = viewFoodItemList();
+        JButton button2 = addFoodItemToShoppingItemListButton();
+        JButton button3 = viewShoppingItemList();
+        JButton button4 = viewExpiryItem();
+        JButton button5 = saveButton();
+        JButton button6 = loadButton();
+
+
+        panel.add(button);
+        panel.add(button1);
+        panel.add(button2);
+        panel.add(button3);
+        panel.add(button4);
+        panel.add(button5);
+        panel.add(button6);
+
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(frameWidth, frameHeight);
+
+
+    }
+
+    private JButton loadButton() {
+        JButton button = createButton("load", 50, 50);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                load();
+            }
+        });
+        return button;
+    }
+
+
+    private JButton saveButton() {
+        JButton button = createButton("save", 50, 50);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                save();
+            }
+        });
+        return button;
+    }
+
+    private JButton viewExpiryItem() {
+        JButton button = createButton("view your expiry Item", 50, 50);
+        doViewExpiryItem1(button);
+
+        return button;
+    }
+
+    private void doViewExpiryItem1(JButton button) {
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame subFrame = createFrame("view your expiry item");
+                JPanel subPanel = createPanel();
+                subPanel.setBackground(new Color(0, 128, 128));
+                List<FoodItem> foodItems = foodItemList.returnExpiryFoodItem().getFoodItemList();
+                String[][] data = new String[100][3];
+                int index = 0;
+                data[index][0] = "Name";
+                data[index][1] = "Purchase Date";
+                data[index][2] = "Expiry Date";
+
+                for (FoodItem foodItem: foodItems) {
+                    index += 1;
+                    data[index][0] = foodItem.getFoodItemName();
+                    data[index][1] = foodItem.getPurchasedDate().getDateInString();
+                    data[index][2] = foodItem.getExpiryDate().getDateInString();
+                }
+                String[] column = {"Name", "Purchased date", "Expiry date"};
+                JTable jt = new JTable(data, column);
+                jt.setBounds(30, 40, 200, 300);
+
+                JScrollPane sp = new JScrollPane(jt);
+                JButton exitButton = exitButtonForView(subFrame);
+                subPanel.add(exitButton);
+                subPanel.add(sp);
+                subFrame.add(subPanel);
+                subFrame.setVisible(true);
+
+            }
+        });
+    }
+
+    private JButton viewShoppingItemList() {
+        JButton button = createButton("view your shoppingItem List", 50, 50);
+        doViewShoppingItemList1(button);
+
+        return button;
+    }
+
+    private void doViewShoppingItemList1(JButton button) {
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame subFrame = createFrame("view your foodItemList");
+                JPanel subPanel = createPanel();
+                subPanel.setBackground(new Color(0, 128, 128));
+                List<FoodItem> foodItems = shoppingItemList.getShoppingItemList();
+                String[][] data = new String[100][1];
+                int index = 0;
+                data[index][0] = "Name";
+
+                for (FoodItem foodItem: foodItems) {
+                    index += 1;
+                    data[index][0] = foodItem.getFoodItemName();
+
+                }
+                String[] column = {"Name"};
+                JTable jt = new JTable(data, column);
+                jt.setBounds(30, 40, 200, 300);
+
+                JScrollPane sp = new JScrollPane(jt);
+                JButton exitButton = exitButtonForView(subFrame);
+                subPanel.add(exitButton);
+                subPanel.add(sp);
+                subFrame.add(subPanel);
+                subFrame.setVisible(true);
+
+            }
+        });
+    }
+
+    private JButton addFoodItemToShoppingItemListButton() {
+        JButton button = createButton("add FoodItem in the ShoppingItem list", 50, 130);
+        doAddShoppingItem1(button);
+
+        return button;
+    }
+
+    private void doAddShoppingItem1(JButton button) {
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // create new Frame for adding foodItem to shoppingItemList with label and textField and
+                // continue button
+                JFrame subFrame = createFrame("add FoodItem to your ShoppingItemList");
+                JPanel subPanel = createPanel();
+                subPanel.setBackground(new Color(0, 128, 128));
+
+                JLabel label = createLabel(
+                        "please enter foodItem purchase name",
+                        frameWidth / 2, frameHeight / 4 + 100 - 50);
+                JTextField textField = createTextField(frameWidth / 2, frameHeight / 4 + 100);
+
+
+                JButton exitButton = exitButtonForAddShoppingItemList(subFrame, textField);
+
+                subPanel.add(label, BorderLayout.CENTER);
+
+                subPanel.add(textField);
+
+                subPanel.add(exitButton);
+
+                subPanel.setLayout(null);
+                subFrame.add(subPanel);
+                subPanel.setVisible(true);
+                subFrame.setVisible(true);
+
+
+            }
+
+
+        });
+    }
+
+    private JButton exitButtonForAddShoppingItemList(JFrame subFrame, JTextField textField) {
+        JButton button = createButton("Complete!", frameWidth / 2, frameHeight / 4 - 100);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String foodItemName = textField.getText();
+
+                FoodItem foodItem1 = new FoodItem(foodItemName, emptyDateFoodItem, emptyDateFoodItem);
+                shoppingItemList.addFoodItem(foodItem1);
+                subFrame.setVisible(false);
+
+            }
+        });
+        return button;
+    }
+
+    private JButton exitButtonForView(JFrame subFrame) {
+        JButton button = createButton("Complete!", frameWidth / 2, frameHeight / 4 - 100);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                subFrame.setVisible(false);
+
+            }
+        });
+        return button;
+    }
+
+    private JButton viewFoodItemList() {
+        JButton button = createButton("view your foodItem List", 50, 50);
+        doViewFoodItemList1(button);
+
+        return button;
+    }
+
+    private JButton addFoodItemToFoodItemListButton() {
+        JButton button = createButton("add FoodItem in the FoodItem list", 50, 90);
+        doAddFoodItem1(button);
+
+        return button;
+
+    }
+
+    private void doViewFoodItemList1(JButton button) {
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame subFrame = createFrame("view your foodItemList");
+                JPanel subPanel = createPanel();
+                subPanel.setBackground(new Color(0, 128, 128));
+                List<FoodItem> foodItems = foodItemList.getFoodItemList();
+                String[][] data = new String[100][3];
+                int index = 0;
+                data[index][0] = "Name";
+                data[index][1] = "Purchase Date";
+                data[index][2] = "Expiry Date";
+
+                for (FoodItem foodItem: foodItems) {
+                    index += 1;
+                    data[index][0] = foodItem.getFoodItemName();
+                    data[index][1] = foodItem.getPurchasedDate().getDateInString();
+                    data[index][2] = foodItem.getExpiryDate().getDateInString();
+                }
+                String[] column = {"Name", "Purchased date", "Expiry date"};
+                JTable jt = new JTable(data, column);
+                jt.setBounds(30, 40, 200, 300);
+
+                JScrollPane sp = new JScrollPane(jt);
+                JButton exitButton = exitButtonForView(subFrame);
+                subPanel.add(exitButton);
+                subPanel.add(sp);
+                subFrame.add(subPanel);
+                subFrame.setVisible(true);
+
+            }
+        });
+    }
+
+
+    private void doAddFoodItem1(JButton button) {
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // create new Frame for adding foodItem to foodItemList with label and textField and
+                // continue button
+                JFrame subFrame = createFrame("add FoodItem to your FoodItemList");
+                JPanel subPanel = createPanel();
+                subPanel.setBackground(new Color(0, 128, 128));
+
+                JLabel label = createLabel(
+                        "please enter foodItem purchase name",
+                        frameWidth / 2, frameHeight / 4 + 100 - 50);
+                JTextField textField = createTextField(frameWidth / 2, frameHeight / 4 + 100);
+
+                JLabel label1 = createLabel(
+                        "please enter foodItem purchase date",
+                        frameWidth / 2, frameHeight / 4 + 200 - 50);
+                JTextField textField1 = createTextField(frameWidth / 2, frameHeight / 4 + 200);
+
+                JLabel label2 = createLabel(
+                        "please enter foodItem expiry date",
+                        frameWidth / 2, frameHeight / 4 + 300 - 50);
+                JTextField textField2 = createTextField(frameWidth / 2, frameHeight / 4 + 300);
+
+                JButton exitButtonForAddFoodItemList =
+                        exitButtonForAddFoodItemList(subFrame, textField, textField1, textField2);
+
+                subPanel.add(label, BorderLayout.CENTER);
+                subPanel.add(label1, BorderLayout.CENTER);
+                subPanel.add(label2, BorderLayout.CENTER);
+                subPanel.add(textField);
+                subPanel.add(textField1);
+                subPanel.add(textField2);
+                subPanel.add(exitButtonForAddFoodItemList);
+
+                subPanel.setLayout(null);
+                subFrame.add(subPanel);
+                subPanel.setVisible(true);
+                subFrame.setVisible(true);
+
+
+            }
+
+
+        });
+    }
+
+
+    private JButton exitButtonForAddFoodItemList(
+            JFrame subFrame, JTextField textField, JTextField textField1, JTextField textField2) {
+        JButton button = createButton("Complete!", frameWidth / 2, frameHeight / 4 - 100);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String foodItemName = textField.getText();
+                DateFoodItem purchaseDate = new DateFoodItem().dateStringToMilli(textField1.getText());
+                DateFoodItem expiryDate = new DateFoodItem().dateStringToMilli(textField2.getText());
+
+                FoodItem foodItem1 = new FoodItem(foodItemName, purchaseDate, expiryDate);
+                foodItemList.addFoodItem(foodItem1);
+                subFrame.setVisible(false);
+
+            }
+        });
+        return button;
+    }
+
+    private JButton exitButton(JFrame frame) {
+        JButton button = createButton("click to exit", 800, 800);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+            }
+        });
+        return button;
+
+    }
+
     private void displayMenu() {
         System.out.println("\nSelect from:");
         System.out.println("\t1 -> Add a food Item in your FoodItem List");
@@ -184,13 +528,11 @@ public class SmartFridgeApp {
             foodItemList.addFoodItem(foodItem1);
             System.out.println(foodItemList.getFoodItemList().get(0).getFoodItemName());
             System.out.println(
-                    "Purchased date: " + foodItemList.getFoodItemList().get(0).milliSecondToDate(
-                            foodItem1.getPurchasedDateInMilli())
+                    "Purchased date: " + foodItemList.getFoodItemList().get(0).getPurchasedDate().getDateInString()
             );
             System.out.println(
                     "Expiry date: "
-                            + foodItemList.getFoodItemList().get(0).milliSecondToDate(
-                            foodItem1.getExpiryDateInMilli()));
+                            + foodItemList.getFoodItemList().get(0).getPurchasedDate().getDateInString());
             notEnd = askForRepeat();
         }
 
@@ -214,7 +556,7 @@ public class SmartFridgeApp {
         }
     }
 
-    private long askForExpiryDate() throws ParseException {
+    private DateFoodItem askForExpiryDate() throws ParseException {
         System.out.println("\nPlease enter FoodItem's Expiry Date in yyyy/mm/dd");
         String expiryDate;
         // wait for the users to enter something
@@ -224,26 +566,20 @@ public class SmartFridgeApp {
             System.out.println("you entered:" + expiryDate);
         }
 
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd");
-        Date date1 = sdf1.parse(expiryDate);
-        long millis1 = date1.getTime();
-        return millis1;
-
+        DateFoodItem date = new DateFoodItem();
+        return date.dateStringToMilli(expiryDate);
     }
 
-    private long askForPurchasedDate() throws ParseException {
+    private DateFoodItem askForPurchasedDate() throws ParseException {
         System.out.println("\nPlease enter FoodItem's Purchased Date in yyyy/mm/dd");
         String purchasedDate = input.nextLine();
-
 
         if (purchasedDate.length() >= 1) {
             System.out.println("you entered: " + purchasedDate);
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-        Date date = sdf.parse(purchasedDate);
-        long millis = date.getTime();
-        return millis;
+        DateFoodItem date = new DateFoodItem();
+        return date.dateStringToMilli(purchasedDate);
     }
 
     private void doDeleteFoodItem() {
@@ -387,7 +723,7 @@ public class SmartFridgeApp {
                     System.out.println("you have added: " + foodItemNameInput + " in your ShoppingItem List");
                 }
             }
-            FoodItem foodItem2 = new FoodItem(foodItemNameInput, 0, 0);
+            FoodItem foodItem2 = new FoodItem(foodItemNameInput, new DateFoodItem(), new DateFoodItem());
             shoppingItemList.addFoodItem(foodItem2);
             notEnd = askForRepeat();
         }
@@ -399,8 +735,8 @@ public class SmartFridgeApp {
         } else {
             for (FoodItem foodItem : foodItemList.getFoodItemList()) {
                 System.out.println(foodItem.getFoodItemName());
-                System.out.println("Purchased date: " + foodItem.milliSecondToDate(foodItem.getPurchasedDateInMilli()));
-                System.out.println("Expiry date: " + foodItem.milliSecondToDate(foodItem.getExpiryDateInMilli()));
+                System.out.println("Purchased date: " + foodItem.getPurchasedDate().getDateInString());
+                System.out.println("Expiry date: " + foodItem.getExpiryDate().getDateInString());
                 System.out.println("Food Status: " + foodItem.getStatus());
             }
         }
@@ -416,10 +752,9 @@ public class SmartFridgeApp {
         } else {
             for (FoodItem foodItem : expiryFoodItemList.getFoodItemList()) {
                 System.out.println(foodItem.getFoodItemName());
-                System.out.println("Purchased date: " + foodItem.getPurchasedDateInMilli());
-                System.out.println("Expiry date: " + foodItem.getExpiryDateInMilli());
+                System.out.println("Purchased date: " + foodItem.getPurchasedDate().getDateInString());
+                System.out.println("Expiry date: " + foodItem.getExpiryDate().getDateInString());
                 System.out.println("Food Status: " + foodItem.getStatus());
-
             }
         }
 

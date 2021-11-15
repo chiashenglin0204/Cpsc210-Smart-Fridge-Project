@@ -1,6 +1,8 @@
 package persistence;
 
 import model.FoodItemList;
+import model.ShoppingItemList;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 
@@ -26,8 +28,22 @@ public class JsonWriterFoodItemList {
 
     // MODIFIES: this
     // EFFECTS: writes JSON representation of workroom to file
+
+
     public void write(FoodItemList foodItemList) {
-        JSONObject json = foodItemList.toJson();
+        JSONObject json = new JSONObject();
+        JSONArray array = new JSONArray();
+        for (int i = 0; i < foodItemList.getFoodItemList().size(); i++) {
+            JSONObject element = new JSONObject();
+            element.put("foodItemName", foodItemList.getFoodItemList().get(i).getFoodItemName());
+            element.put("expiryDate", foodItemList.getFoodItemList().get(i).getExpiryDate().getDateInString());
+            element.put("purchasedDate",
+                    foodItemList.getFoodItemList().get(i).getPurchasedDate().getDateInString());
+            array.put(element);
+        }
+
+        json.put("foodItems", array);
+        foodItemList.toJson();
         saveToFile(json.toString(TAB));
     }
 

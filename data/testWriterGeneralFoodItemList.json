@@ -1,12 +1,12 @@
 {"foodItems": [
     {
-        "purchasedDateInMilli": 1611993600000,
-        "expiryDateInMilli": 1612080000000,
-        "foodItemName": "ChiaSheng"
+        "expiryDate": "2021/02/05",
+        "foodItemName": "ChiaSheng",
+        "purchasedDate": "2021/02/04"
     },
     {
-        "purchasedDateInMilli": 1634626800000,
-        "expiryDateInMilli": 1634799600000,
-        "foodItemName": "Taipei"
+        "expiryDate": "2020/02/08",
+        "foodItemName": "Taipei",
+        "purchasedDate": "2020/02/06"
     }
 ]}

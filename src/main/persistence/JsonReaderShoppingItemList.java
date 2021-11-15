@@ -1,5 +1,6 @@
 package persistence;
 
+import model.DateFoodItem;
 import model.FoodItem;
 import model.FoodItemList;
 
@@ -65,7 +66,7 @@ public class JsonReaderShoppingItemList {
     private void addFoodItemToShoppingItemList(ShoppingItemList shoppingItemList, JSONObject jsonObject) {
         String foodItemName = jsonObject.getString("foodItemName");
 
-        FoodItem foodItem = new FoodItem(foodItemName, 0,0);
+        FoodItem foodItem = new FoodItem(foodItemName, new DateFoodItem(),new DateFoodItem());
         shoppingItemList.addFoodItem(foodItem);
     }
 

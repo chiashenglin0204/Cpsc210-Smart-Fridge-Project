@@ -1,12 +1,12 @@
 {"shoppingItems": [
-    {
-        "purchasedDateInMilli": 0,
-        "expiryDateInMilli": 0,
-        "foodItemName": "ChiaSheng"
-    },
-    {
-        "purchasedDateInMilli": 0,
-        "expiryDateInMilli": 0,
-        "foodItemName": "Taipei"
-    }
+  {
+    "expiryDate": "",
+    "foodItemName": "ChiaSheng",
+    "purchasedDate": ""
+  },
+  {
+    "expiryDate": "",
+    "foodItemName": "Taipei",
+    "purchasedDate": ""
+  }
 ]}
