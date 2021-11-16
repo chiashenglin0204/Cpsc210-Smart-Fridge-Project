@@ -1,7 +1,7 @@
 package persistence;
 
-import model.DateFoodItem;
-import model.FoodItemList;
+
+
 import model.ShoppingItemList;
 import org.json.JSONArray;
 import org.json.JSONObject;

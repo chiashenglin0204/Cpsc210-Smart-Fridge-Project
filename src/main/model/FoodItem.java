@@ -70,11 +70,11 @@ public class FoodItem implements Writable {
     }
 
     // Effect: Convert data from Millisecond to date format
-    public Date milliSecondToDate(long milisecond) {
-        //DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-        Date result = new Date(milisecond);
-        return result;
-    }
+//    public Date milliSecondToDate(long milisecond) {
+//        //DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+//        Date result = new Date(milisecond);
+//        return result;
+//    }
 
     @Override
     public JSONObject toJson() {

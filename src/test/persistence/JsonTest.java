@@ -1,5 +1,4 @@
 package persistence;
-import model.DateFoodItem;
 import model.FoodItem;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

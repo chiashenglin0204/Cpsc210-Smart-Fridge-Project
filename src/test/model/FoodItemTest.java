@@ -10,8 +10,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class FoodItemTest {
     private FoodItem foodItem;
-    private DateFoodItem purchasedDate;
-    private DateFoodItem expiryDate;
 
     public long getLocalTime() {
         return Calendar.getInstance().getTimeInMillis();
@@ -19,8 +17,8 @@ public class FoodItemTest {
 
     @BeforeEach
     public void runBefore() {
-        purchasedDate=new DateFoodItem().dateStringToMilli("2021/01/30");
-        expiryDate=new DateFoodItem().dateStringToMilli("2021/02/04");
+        DateFoodItem purchasedDate = new DateFoodItem().dateStringToMilli("2021/01/30");
+        DateFoodItem expiryDate = new DateFoodItem().dateStringToMilli("2021/02/04");
         foodItem = new FoodItem("banana", purchasedDate, expiryDate);
     }
 
