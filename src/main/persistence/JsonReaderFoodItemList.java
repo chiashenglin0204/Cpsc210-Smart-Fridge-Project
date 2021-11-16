@@ -8,9 +8,12 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.util.stream.Stream;
 
 import org.json.*;
+
+import static com.sun.tools.internal.ws.wsdl.parser.Util.fail;
 
 // Represents a reader that reads workroom from JSON data stored in file
 public class JsonReaderFoodItemList {
@@ -63,15 +66,19 @@ public class JsonReaderFoodItemList {
     // MODIFIES: foodItemList
     // EFFECTS: parses foodItem from JSON object and adds it to foodItemList
     private void addFoodItemToFoodItemList(FoodItemList foodItemList, JSONObject jsonObject) {
-        String foodItemName = jsonObject.getString("foodItemName");
-        DateFoodItem purchasedDate = new DateFoodItem();
-        purchasedDate.dateStringToMilli(jsonObject.get("purchasedDate").toString());
+        try {
+            String foodItemName = jsonObject.getString("foodItemName");
+            DateFoodItem purchasedDate = new DateFoodItem();
+            purchasedDate.dateStringToMilli(jsonObject.get("purchasedDate").toString());
 
-        DateFoodItem expiryDate = new DateFoodItem();
-        expiryDate.dateStringToMilli(jsonObject.get("expiryDate").toString());
+            DateFoodItem expiryDate = new DateFoodItem();
+            expiryDate.dateStringToMilli(jsonObject.get("expiryDate").toString());
 
-        FoodItem foodItem = new FoodItem(foodItemName, purchasedDate, expiryDate);
-        foodItemList.addFoodItem(foodItem);
+            FoodItem foodItem = new FoodItem(foodItemName, purchasedDate, expiryDate);
+            foodItemList.addFoodItem(foodItem);
+        } catch (ParseException exception) {
+            fail("parseException did not expect");
+        }
     }
 
 }

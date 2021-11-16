@@ -7,6 +7,7 @@ import model.FoodItemList;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -78,6 +79,9 @@ class JsonWriterFoodItemListTest extends JsonTest {
 
         } catch (IOException e) {
             fail("Exception should not have been thrown");
+        }
+        catch (ParseException exception) {
+            fail("did not expect parseException");
         }
     }
 }

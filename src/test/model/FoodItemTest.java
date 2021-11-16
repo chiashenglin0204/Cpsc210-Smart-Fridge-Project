@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
+import java.text.ParseException;
 import java.util.Calendar;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,10 +17,14 @@ public class FoodItemTest {
     }
 
     @BeforeEach
-    public void runBefore() {
-        DateFoodItem purchasedDate = new DateFoodItem().dateStringToMilli("2021/01/30");
+    public void runBefore() throws ParseException {
+        DateFoodItem purchasedDate = null;
+
+        purchasedDate = new DateFoodItem().dateStringToMilli("2021/01/30");
         DateFoodItem expiryDate = new DateFoodItem().dateStringToMilli("2021/02/04");
         foodItem = new FoodItem("banana", purchasedDate, expiryDate);
+
+
     }
 
 
@@ -43,13 +48,13 @@ public class FoodItemTest {
 
     @Test
     public void testMarkExpiryFoodItem() {
-        assertEquals("2021/02/04",foodItem.getExpiryDate().getDateInString());
+        assertEquals("2021/02/04", foodItem.getExpiryDate().getDateInString());
         DateFoodItem purchaseDate1 = new DateFoodItem();
         DateFoodItem expiryDate1 = new DateFoodItem();
 
         purchaseDate1.dateMilliToString(202020);
-        expiryDate1.dateMilliToString(getLocalTime()+20);
-        FoodItem banana = new FoodItem("banana",purchaseDate1,
+        expiryDate1.dateMilliToString(getLocalTime() + 20);
+        FoodItem banana = new FoodItem("banana", purchaseDate1,
                 expiryDate1);
         banana.checkExpiryFoodItem();
         assertFalse(banana.isExpired());
@@ -57,15 +62,13 @@ public class FoodItemTest {
         DateFoodItem purchaseDate2 = new DateFoodItem();
         DateFoodItem expiryDate2 = new DateFoodItem();
         purchaseDate2.dateMilliToString(202020);
-        expiryDate2.dateMilliToString(getLocalTime()-20);
-        FoodItem apple = new FoodItem("apple",purchaseDate2,
+        expiryDate2.dateMilliToString(getLocalTime() - 20);
+        FoodItem apple = new FoodItem("apple", purchaseDate2,
                 expiryDate2);
         apple.checkExpiryFoodItem();
 
         assertTrue(apple.isExpired());
     }
-
-
 
 
 //    @Test

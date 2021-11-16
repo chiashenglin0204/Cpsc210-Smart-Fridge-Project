@@ -2,11 +2,11 @@ package model;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+//import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import static com.sun.tools.internal.ws.wsdl.parser.Util.fail;
+//import static com.sun.tools.internal.ws.wsdl.parser.Util.fail;
 
 
 public class DateFoodItem {
@@ -28,19 +28,20 @@ public class DateFoodItem {
         sdf.setTimeZone(TimeZone.getTimeZone(timezoneCode));
         String formattedDate = sdf.format(date);
         this.dateInString = formattedDate;
-        return  this;
+        return this;
     }
 
-    public DateFoodItem dateStringToMilli(String dateInString) {
-        try {
-            this.dateInString = dateInString;
-            SimpleDateFormat sdf = new SimpleDateFormat(datePattern);
-            java.util.Date date = null;
-            date = sdf.parse(dateInString);
-            dateInMilli = date.getTime();
-        } catch (ParseException e) {
-            fail("invalid date input");
-        }
+    public DateFoodItem dateStringToMilli(String dateInString) throws ParseException {
+
+        this.dateInString = dateInString;
+        SimpleDateFormat sdf = new SimpleDateFormat(datePattern);
+        java.util.Date date = null;
+        date = sdf.parse(dateInString);
+        dateInMilli = date.getTime();
+
+        //catch (ParseException e) {
+//            fail("invalid date input");
+//        }
         return this;
     }
 

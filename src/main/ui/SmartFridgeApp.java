@@ -18,6 +18,8 @@ import java.util.Scanner;
 import java.awt.*;
 import java.awt.event.*;
 
+import static com.sun.tools.internal.ws.wsdl.parser.Util.fail;
+
 
 public class SmartFridgeApp extends JFrame {
     private static final String JSON_STORE_FoodItemList = "./data/foodItem.json";
@@ -240,7 +242,7 @@ public class SmartFridgeApp extends JFrame {
 
 //                JScrollPane sp = new JScrollPane(jt);
 //                subPanel.add(sp);
-                createAndAddScrollPane(subPanel,jt);
+                createAndAddScrollPane(subPanel, jt);
                 addExitButtonToSubPanel(subFrame, subPanel);
 
                 addPanelToFrameAndVisible(subFrame, subPanel);
@@ -479,13 +481,17 @@ public class SmartFridgeApp extends JFrame {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String foodItemName = textField.getText();
-                DateFoodItem purchaseDate = new DateFoodItem().dateStringToMilli(textField1.getText());
-                DateFoodItem expiryDate = new DateFoodItem().dateStringToMilli(textField2.getText());
+                try {
+                    String foodItemName = textField.getText();
+                    DateFoodItem purchaseDate = new DateFoodItem().dateStringToMilli(textField1.getText());
+                    DateFoodItem expiryDate = new DateFoodItem().dateStringToMilli(textField2.getText());
 
-                FoodItem foodItem1 = new FoodItem(foodItemName, purchaseDate, expiryDate);
-                foodItemList.addFoodItem(foodItem1);
-                subFrame.setVisible(false);
+                    FoodItem foodItem1 = new FoodItem(foodItemName, purchaseDate, expiryDate);
+                    foodItemList.addFoodItem(foodItem1);
+                    subFrame.setVisible(false);
+                } catch (ParseException exception) {
+                    fail("invalid date input");
+                }
 
             }
         });
