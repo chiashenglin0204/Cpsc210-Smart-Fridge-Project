@@ -20,9 +20,6 @@ public class DateFoodItem {
         this.dateInMilli = 0;
     }
 
-    public long getLocalTime() {
-        return Calendar.getInstance().getTimeInMillis();
-    }
 
     public DateFoodItem dateMilliToString(long dateInMilli) {
         this.dateInMilli = dateInMilli;

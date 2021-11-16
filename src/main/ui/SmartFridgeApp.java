@@ -13,7 +13,6 @@ import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.awt.*;
@@ -66,10 +65,6 @@ public class SmartFridgeApp extends JFrame {
         return label;
     }
 
-    private JTable createTable() {
-        JTable table = new JTable();
-        return table;
-    }
 
     private JPanel createPanel() {
         JPanel panel = new JPanel();
@@ -85,7 +80,7 @@ public class SmartFridgeApp extends JFrame {
         return frame;
     }
 
-    public SmartFridgeApp() throws ParseException, FileNotFoundException {
+    public SmartFridgeApp() throws FileNotFoundException, ParseException {
         jsonWriterFoodItemList = new JsonWriterFoodItemList(JSON_STORE_FoodItemList);
         jsonWriterShoppingItemList = new JsonWriterShoppingItemList(JSON_STORE_ShoppingItemList);
         jsonReaderShoppingItemList = new JsonReaderShoppingItemList(JSON_STORE_ShoppingItemList);
@@ -96,52 +91,51 @@ public class SmartFridgeApp extends JFrame {
     }
 
 
-    private void runSmartFridge() throws ParseException {
-        boolean keepgoing = true;
-        String command = null;
+    private void runSmartFridge() throws ParseException, FileNotFoundException {
+        //boolean keepGoing = true;
+        //String command = null;
         init();
-        while (keepgoing) {
-            displayMenu1();
-            command = input.next();
-            command = command.toLowerCase();
 
-            if (command.equals("q")) {
-                keepgoing = false;
-            } else {
-                processCommand(command);
-            }
-        }
+        displayMenu1();
+//            command = input.next();
+//            command = command.toLowerCase();
+
+//            if (command.equals("q")) {
+//                keepgoing = false;
+//            } else {
+//                processCommand(command);
+//            }
 
 
     }
 
-    // MODIFIES: this
-    // EFFECTS: processes user command
-    private void processCommand(String command) throws ParseException {
-        if (command.equals("1")) {
-            doAddFoodItem();
-        } else if (command.equals("2")) {
-            doAddShoppingItem();
-        } else if (command.equals("3")) {
-            doDeleteFoodItem();
-        } else if (command.equals("4")) {
-            doDeleteShoppingItem();
-        } else if (command.equals("5")) {
-            doViewFoodItemList();
-        } else if (command.equals("6")) {
-            doViewShoppingItemList();
-        } else if (command.equals("7")) {
-            doViewExpiryItem();
-        } else if (command.equals("8")) {
-            doMarkFoodItem();
-        } else if (command.equals("s")) {
-            save();
-        } else if (command.equals("l")) {
-            load();
-        } else {
-            System.out.println("Selection not valid...");
-        }
-    }
+//    // MODIFIES: this
+//    // EFFECTS: processes user command
+//    private void processCommand(String command) throws ParseException {
+//        if (command.equals("1")) {
+//            doAddFoodItem();
+//        } else if (command.equals("2")) {
+//            doAddShoppingItem();
+//        } else if (command.equals("3")) {
+//            doDeleteFoodItem();
+//        } else if (command.equals("4")) {
+//            doDeleteShoppingItem();
+//        } else if (command.equals("5")) {
+//            doViewFoodItemList();
+//        } else if (command.equals("6")) {
+//            doViewShoppingItemList();
+//        } else if (command.equals("7")) {
+//            doViewExpiryItem();
+//        } else if (command.equals("8")) {
+//            doMarkFoodItem();
+//        } else if (command.equals("s")) {
+//            save();
+//        } else if (command.equals("l")) {
+//            load();
+//        } else {
+//            System.out.println("Selection not valid...");
+//        }
+//    }
 
     private void save() {
         saveFoodItemList();
@@ -173,6 +167,7 @@ public class SmartFridgeApp extends JFrame {
         JButton button4 = viewExpiryItem();
         JButton button5 = saveButton();
         JButton button6 = loadButton();
+        JButton button7 = exitButton(frame);
 
 
         panel.add(button);
@@ -182,6 +177,8 @@ public class SmartFridgeApp extends JFrame {
         panel.add(button4);
         panel.add(button5);
         panel.add(button6);
+        panel.add(button7);
+
 
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -230,29 +227,42 @@ public class SmartFridgeApp extends JFrame {
                 List<FoodItem> foodItems = foodItemList.returnExpiryFoodItem().getFoodItemList();
                 String[][] data = new String[100][3];
                 int index = 0;
-                data[index][0] = "Name";
-                data[index][1] = "Purchase Date";
-                data[index][2] = "Expiry Date";
+                setColumn(data, index, "Name", "Purchase Date", "Expiry Date");
 
-                for (FoodItem foodItem: foodItems) {
+                for (FoodItem foodItem : foodItems) {
                     index += 1;
-                    data[index][0] = foodItem.getFoodItemName();
-                    data[index][1] = foodItem.getPurchasedDate().getDateInString();
-                    data[index][2] = foodItem.getExpiryDate().getDateInString();
+                    setColumn(data, index, foodItem.getFoodItemName(),
+                            foodItem.getPurchasedDate().getDateInString(), foodItem.getExpiryDate().getDateInString());
                 }
                 String[] column = {"Name", "Purchased date", "Expiry date"};
                 JTable jt = new JTable(data, column);
                 jt.setBounds(30, 40, 200, 300);
 
-                JScrollPane sp = new JScrollPane(jt);
-                JButton exitButton = exitButtonForView(subFrame);
-                subPanel.add(exitButton);
-                subPanel.add(sp);
-                subFrame.add(subPanel);
-                subFrame.setVisible(true);
+//                JScrollPane sp = new JScrollPane(jt);
+//                subPanel.add(sp);
+                createAndAddScrollPane(subPanel,jt);
+                addExitButtonToSubPanel(subFrame, subPanel);
 
+                addPanelToFrameAndVisible(subFrame, subPanel);
             }
         });
+    }
+
+    private void addExitButtonToSubPanel(JFrame subFrame, JPanel subPanel) {
+        JButton exitButton = exitButtonForView(subFrame);
+        subPanel.add(exitButton);
+    }
+
+    private void addPanelToFrameAndVisible(JFrame subFrame, JPanel subPanel) {
+        subFrame.add(subPanel);
+        subPanel.setVisible(true);
+        subFrame.setVisible(true);
+    }
+
+    private void setColumn(String[][] data, int index, String name, String s, String s2) {
+        data[index][0] = name;
+        data[index][1] = s;
+        data[index][2] = s2;
     }
 
     private JButton viewShoppingItemList() {
@@ -266,7 +276,7 @@ public class SmartFridgeApp extends JFrame {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFrame subFrame = createFrame("view your foodItemList");
+                JFrame subFrame = createFrame("view your shoppingItemList");
                 JPanel subPanel = createPanel();
                 subPanel.setBackground(new Color(0, 128, 128));
                 List<FoodItem> foodItems = shoppingItemList.getShoppingItemList();
@@ -274,7 +284,7 @@ public class SmartFridgeApp extends JFrame {
                 int index = 0;
                 data[index][0] = "Name";
 
-                for (FoodItem foodItem: foodItems) {
+                for (FoodItem foodItem : foodItems) {
                     index += 1;
                     data[index][0] = foodItem.getFoodItemName();
 
@@ -283,15 +293,18 @@ public class SmartFridgeApp extends JFrame {
                 JTable jt = new JTable(data, column);
                 jt.setBounds(30, 40, 200, 300);
 
-                JScrollPane sp = new JScrollPane(jt);
-                JButton exitButton = exitButtonForView(subFrame);
-                subPanel.add(exitButton);
-                subPanel.add(sp);
-                subFrame.add(subPanel);
-                subFrame.setVisible(true);
+                createAndAddScrollPane(subPanel, jt);
+                addExitButtonToSubPanel(subFrame, subPanel);
+
+                addPanelToFrameAndVisible(subFrame, subPanel);
 
             }
         });
+    }
+
+    private void createAndAddScrollPane(JPanel subPanel, JTable jt) {
+        JScrollPane sp = new JScrollPane(jt);
+        subPanel.add(sp);
     }
 
     private JButton addFoodItemToShoppingItemListButton() {
@@ -326,9 +339,8 @@ public class SmartFridgeApp extends JFrame {
                 subPanel.add(exitButton);
 
                 subPanel.setLayout(null);
-                subFrame.add(subPanel);
-                subPanel.setVisible(true);
-                subFrame.setVisible(true);
+
+                addPanelToFrameAndVisible(subFrame, subPanel);
 
 
             }
@@ -381,37 +393,29 @@ public class SmartFridgeApp extends JFrame {
     }
 
     private void doViewFoodItemList1(JButton button) {
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFrame subFrame = createFrame("view your foodItemList");
-                JPanel subPanel = createPanel();
-                subPanel.setBackground(new Color(0, 128, 128));
-                List<FoodItem> foodItems = foodItemList.getFoodItemList();
-                String[][] data = new String[100][3];
-                int index = 0;
-                data[index][0] = "Name";
-                data[index][1] = "Purchase Date";
-                data[index][2] = "Expiry Date";
+        button.addActionListener(e -> {
+            JFrame subFrame = createFrame("view your foodItemList");
+            JPanel subPanel = createPanel();
+            subPanel.setBackground(new Color(0, 128, 128));
+            List<FoodItem> foodItems = foodItemList.getFoodItemList();
+            String[][] data = new String[100][3];
+            int index = 0;
+            setColumn(data, index, "Name", "Purchase Date", "Expiry Date");
 
-                for (FoodItem foodItem: foodItems) {
-                    index += 1;
-                    data[index][0] = foodItem.getFoodItemName();
-                    data[index][1] = foodItem.getPurchasedDate().getDateInString();
-                    data[index][2] = foodItem.getExpiryDate().getDateInString();
-                }
-                String[] column = {"Name", "Purchased date", "Expiry date"};
-                JTable jt = new JTable(data, column);
-                jt.setBounds(30, 40, 200, 300);
-
-                JScrollPane sp = new JScrollPane(jt);
-                JButton exitButton = exitButtonForView(subFrame);
-                subPanel.add(exitButton);
-                subPanel.add(sp);
-                subFrame.add(subPanel);
-                subFrame.setVisible(true);
-
+            for (FoodItem foodItem : foodItems) {
+                index += 1;
+                setColumn(data, index, foodItem.getFoodItemName(),
+                        foodItem.getPurchasedDate().getDateInString(), foodItem.getExpiryDate().getDateInString());
             }
+            String[] column = {"Name", "Purchased date", "Expiry date"};
+            JTable jt = new JTable(data, column);
+            jt.setBounds(30, 40, 200, 300);
+
+            JScrollPane sp = new JScrollPane(jt);
+            addExitButtonToSubPanel(subFrame, subPanel);
+            subPanel.add(sp);
+            addPanelToFrameAndVisible(subFrame, subPanel);
+
         });
     }
 
@@ -426,31 +430,18 @@ public class SmartFridgeApp extends JFrame {
                 JPanel subPanel = createPanel();
                 subPanel.setBackground(new Color(0, 128, 128));
 
-                JLabel label = createLabel(
-                        "please enter foodItem purchase name",
-                        frameWidth / 2, frameHeight / 4 + 100 - 50);
+                JLabel label = getjLabel("please enter foodItem purchase name", 100);
                 JTextField textField = createTextField(frameWidth / 2, frameHeight / 4 + 100);
 
-                JLabel label1 = createLabel(
-                        "please enter foodItem purchase date",
-                        frameWidth / 2, frameHeight / 4 + 200 - 50);
+                JLabel label1 = getjLabel("please enter foodItem purchase date", 200);
                 JTextField textField1 = createTextField(frameWidth / 2, frameHeight / 4 + 200);
 
-                JLabel label2 = createLabel(
-                        "please enter foodItem expiry date",
-                        frameWidth / 2, frameHeight / 4 + 300 - 50);
+                JLabel label2 = getjLabel("please enter foodItem expiry date", 300);
                 JTextField textField2 = createTextField(frameWidth / 2, frameHeight / 4 + 300);
 
-                JButton exitButtonForAddFoodItemList =
-                        exitButtonForAddFoodItemList(subFrame, textField, textField1, textField2);
+                JButton exit = exitButtonForAddFoodItemList(subFrame, textField, textField1, textField2);
 
-                subPanel.add(label, BorderLayout.CENTER);
-                subPanel.add(label1, BorderLayout.CENTER);
-                subPanel.add(label2, BorderLayout.CENTER);
-                subPanel.add(textField);
-                subPanel.add(textField1);
-                subPanel.add(textField2);
-                subPanel.add(exitButtonForAddFoodItemList);
+                addJComponentToPanel(subPanel, label, textField, label1, textField1, label2, textField2, exit);
 
                 subPanel.setLayout(null);
                 subFrame.add(subPanel);
@@ -464,6 +455,23 @@ public class SmartFridgeApp extends JFrame {
         });
     }
 
+    private void addJComponentToPanel(
+            JPanel subPanel, JLabel label, JTextField textField, JLabel label1, JTextField textField1,
+            JLabel label2, JTextField textField2, JButton exit) {
+        subPanel.add(label, BorderLayout.CENTER);
+        subPanel.add(label1, BorderLayout.CENTER);
+        subPanel.add(label2, BorderLayout.CENTER);
+        subPanel.add(textField);
+        subPanel.add(textField1);
+        subPanel.add(textField2);
+        subPanel.add(exit);
+    }
+
+    private JLabel getjLabel(String s, int i) {
+        return createLabel(
+                s,
+                frameWidth / 2, frameHeight / 4 + i - 50);
+    }
 
     private JButton exitButtonForAddFoodItemList(
             JFrame subFrame, JTextField textField, JTextField textField1, JTextField textField2) {
@@ -496,281 +504,281 @@ public class SmartFridgeApp extends JFrame {
 
     }
 
-    private void displayMenu() {
-        System.out.println("\nSelect from:");
-        System.out.println("\t1 -> Add a food Item in your FoodItem List");
-        System.out.println("\t2 -> Add a food item in your ShoppingItem List");
-        System.out.println("\t3 -> Delete a food item in your FoodItem List");
-        System.out.println("\t4 -> Delete a food item in your ShoppingItem List");
-        System.out.println("\t5 -> view your FoodItem List");
-        System.out.println("\t6 -> view your ShoppingItem List");
-        System.out.println("\t7 -> view your Expiry FoodItems");
-        System.out.println("\t8 -> Mark your FoodItem in FoodItem List");
-        System.out.println("\ts -> Save your file");
-        System.out.println("\tl -> Load your file");
-        System.out.println("\tq -> quit");
-    }
+//    private void displayMenu() {
+//        System.out.println("\nSelect from:");
+//        System.out.println("\t1 -> Add a food Item in your FoodItem List");
+//        System.out.println("\t2 -> Add a food item in your ShoppingItem List");
+//        System.out.println("\t3 -> Delete a food item in your FoodItem List");
+//        System.out.println("\t4 -> Delete a food item in your ShoppingItem List");
+//        System.out.println("\t5 -> view your FoodItem List");
+//        System.out.println("\t6 -> view your ShoppingItem List");
+//        System.out.println("\t7 -> view your Expiry FoodItems");
+//        System.out.println("\t8 -> Mark your FoodItem in FoodItem List");
+//        System.out.println("\ts -> Save your file");
+//        System.out.println("\tl -> Load your file");
+//        System.out.println("\tq -> quit");
+//    }
 
-    private void doAddFoodItem() throws ParseException {
-        boolean notEnd = true;
-        while (notEnd) {
-            System.out.println("\nPlease enter FoodItem's Name");
-            String foodItemName = input.nextLine();
+//    private void doAddFoodItem() throws ParseException {
+//        boolean notEnd = true;
+//        while (notEnd) {
+//            System.out.println("\nPlease enter FoodItem's Name");
+//            String foodItemName = input.nextLine();
+//
+//            while (foodItemName.length() < 1) {
+//                foodItemName = input.nextLine();
+//                if (foodItemName.length() >= 1) {
+//                    System.out.println("you entered: " + foodItemName);
+//                }
+//            }
+//
+//            FoodItem foodItem1 = new FoodItem(foodItemName, askForPurchasedDate(), askForExpiryDate());
+//            foodItemList.addFoodItem(foodItem1);
+//            System.out.println(foodItemList.getFoodItemList().get(0).getFoodItemName());
+//            System.out.println(
+//                    "Purchased date: " + foodItemList.getFoodItemList().get(0).getPurchasedDate().getDateInString()
+//            );
+//            System.out.println(
+//                    "Expiry date: "
+//                            + foodItemList.getFoodItemList().get(0).getPurchasedDate().getDateInString());
+//            notEnd = askForRepeat();
+//        }
+//
+//    }
 
-            while (foodItemName.length() < 1) {
-                foodItemName = input.nextLine();
-                if (foodItemName.length() >= 1) {
-                    System.out.println("you entered: " + foodItemName);
-                }
-            }
+//    private boolean askForRepeat() {
+//        while (true) {
+//            System.out.println("Want to keep doing?, type y for yes, n for no");
+//            String choiceInputTF = input.nextLine();
+//            if (choiceInputTF.length() >= 1) {
+//                System.out.println("you entered:" + choiceInputTF);
+//            }
+//
+//            if (choiceInputTF.equals("y")) {
+//                return true;
+//            } else if (choiceInputTF.equals("n")) {
+//                return false;
+//            } else {
+//                System.out.println("invalid input, please type again");
+//            }
+//        }
+//    }
 
-            FoodItem foodItem1 = new FoodItem(foodItemName, askForPurchasedDate(), askForExpiryDate());
-            foodItemList.addFoodItem(foodItem1);
-            System.out.println(foodItemList.getFoodItemList().get(0).getFoodItemName());
-            System.out.println(
-                    "Purchased date: " + foodItemList.getFoodItemList().get(0).getPurchasedDate().getDateInString()
-            );
-            System.out.println(
-                    "Expiry date: "
-                            + foodItemList.getFoodItemList().get(0).getPurchasedDate().getDateInString());
-            notEnd = askForRepeat();
-        }
+//    private DateFoodItem askForExpiryDate() throws ParseException {
+//        System.out.println("\nPlease enter FoodItem's Expiry Date in yyyy/mm/dd");
+//        String expiryDate;
+//        // wait for the users to enter something
+//
+//        expiryDate = input.nextLine();
+//        if (expiryDate.length() >= 1) {
+//            System.out.println("you entered:" + expiryDate);
+//        }
+//
+//        DateFoodItem date = new DateFoodItem();
+//        return date.dateStringToMilli(expiryDate);
+//    }
 
-    }
+//    private DateFoodItem askForPurchasedDate() throws ParseException {
+//        System.out.println("\nPlease enter FoodItem's Purchased Date in yyyy/mm/dd");
+//        String purchasedDate = input.nextLine();
+//
+//        if (purchasedDate.length() >= 1) {
+//            System.out.println("you entered: " + purchasedDate);
+//        }
+//
+//        DateFoodItem date = new DateFoodItem();
+//        return date.dateStringToMilli(purchasedDate);
+//    }
 
-    private boolean askForRepeat() {
-        while (true) {
-            System.out.println("Want to keep doing?, type y for yes, n for no");
-            String choiceInputTF = input.nextLine();
-            if (choiceInputTF.length() >= 1) {
-                System.out.println("you entered:" + choiceInputTF);
-            }
+//    private void doDeleteFoodItem() {
+//        boolean onGoing;
+//        String foodItemNameInput;
+//        do {
+//            foodItemNameInput = "";
+//            System.out.println("\nPlease enter FoodItem's Name you want to delete in your FoodItem List");
+//            while (foodItemNameInput.length() < 1) {
+//                foodItemNameInput = input.nextLine();
+//            }
+//            if (foodItemNameInput.length() >= 1) {
+//                System.out.println("you entered: " + foodItemNameInput);
+//            }
+//            tryToDeleteFoodItemFromFoodItemList(foodItemNameInput);
+//
+//            onGoing = askForRepeat();
+//        } while (onGoing);
+//    }
 
-            if (choiceInputTF.equals("y")) {
-                return true;
-            } else if (choiceInputTF.equals("n")) {
-                return false;
-            } else {
-                System.out.println("invalid input, please type again");
-            }
-        }
-    }
+//    private void tryToDeleteFoodItemFromFoodItemList(String foodItemNameInput) {
+//        if (foodItemList.containInFoodItemList(foodItemNameInput)) {
+//            for (FoodItem foodItem : foodItemList.getFoodItemList()) {
+//                if (foodItem.getFoodItemName().equals(foodItemNameInput)) {
+//                    foodItemList.deleteFoodItem(foodItem);
+//                    break;
+//                }
+//            }
+//            System.out.println("you have deleted: " + foodItemNameInput + " in your FoodItem List");
+//        } else {
+//            System.out.println("Can't find " + foodItemNameInput + " in your FoodItem List");
+//        }
+//    }
 
-    private DateFoodItem askForExpiryDate() throws ParseException {
-        System.out.println("\nPlease enter FoodItem's Expiry Date in yyyy/mm/dd");
-        String expiryDate;
-        // wait for the users to enter something
+//    private void doDeleteShoppingItem() {
+//        boolean onGoing;
+//        String foodItemNameInput;
+//        do {
+//            foodItemNameInput = "";
+//            System.out.println("\nPlease enter FoodItem's Name you want to delete in your ShoppingItem List");
+//            while (foodItemNameInput.length() < 1) {
+//                foodItemNameInput = input.nextLine();
+//            }
+//            if (foodItemNameInput.length() >= 1) {
+//                System.out.println("you entered: " + foodItemNameInput);
+//            }
+//            tryToDeleteFoodItemFromShoppingItemList(foodItemNameInput);
+//            onGoing = askForRepeat();
+//        } while (onGoing);
+//    }
 
-        expiryDate = input.nextLine();
-        if (expiryDate.length() >= 1) {
-            System.out.println("you entered:" + expiryDate);
-        }
+//    private void tryToDeleteFoodItemFromShoppingItemList(String foodItemNameInput) {
+//        if (shoppingItemList.containInShoppingItemList(foodItemNameInput)) {
+//            for (FoodItem foodItem : shoppingItemList.getShoppingItemList()) {
+//                if (foodItem.getFoodItemName().equals(foodItemNameInput)) {
+//                    shoppingItemList.deleteFoodItem(foodItem);
+//                    break;
+//                }
+//            }
+//            System.out.println("you have deleted: " + foodItemNameInput + " in your ShoppingItem List");
+//        } else {
+//            System.out.println("Can't find " + foodItemNameInput + " in your ShoppingItem List");
+//        }
+//
+//    }
 
-        DateFoodItem date = new DateFoodItem();
-        return date.dateStringToMilli(expiryDate);
-    }
+//    private void doMarkFoodItem() {
+//        boolean notEnd = true;
+//        while (notEnd) {
+//            System.out.println(
+//                    "\nPlease enter FoodItem's Name you want to mark as Used or OutOfStock in your FoodItem List");
+//            String foodItemNameInput = input.nextLine();
+//
+//            while (foodItemNameInput.length() < 1) {
+//                foodItemNameInput = input.nextLine();
+//                if (foodItemNameInput.length() >= 1) {
+//                    System.out.println("you entered: " + foodItemNameInput);
+//                }
+//            }
+//
+//            if (foodItemList.containInFoodItemList(foodItemNameInput)) {
+//                askForChangingStatus(foodItemNameInput);
+//
+//            } else {
+//                System.out.println("Can't find " + foodItemNameInput + " in FoodItem list");
+//            }
+//            notEnd = askForRepeat();
+//        }
+//    }
 
-    private DateFoodItem askForPurchasedDate() throws ParseException {
-        System.out.println("\nPlease enter FoodItem's Purchased Date in yyyy/mm/dd");
-        String purchasedDate = input.nextLine();
+//    private void askForChangingStatus(String foodItemNameInput) {
+//        System.out.println("\nPlease enter one of the Status: type used or outofstock");
+//        String choiceInput;
+//        do {
+//            choiceInput = input.nextLine();
+//            if (choiceInput.length() >= 1) {
+//                if (choiceInput.equals("used") || choiceInput.equals("outofstock")) {
+//                    System.out.println("you entered: " + choiceInput);
+//                } else {
+//                    System.out.println("\ninvalid input, please try again!");
+//                }
+//            } else {
+//                System.out.println("\nempty input, please try again!");
+//            }
+//        } while (choiceInput.length() < 1 || (!choiceInput.equals("used") && !choiceInput.equals("outofstock")));
+//
+//        changeFoodItemStatus(foodItemNameInput, choiceInput);
+//
+//        if (choiceInput.equals("used") || choiceInput.equals("outofstock")) {
+//
+//            System.out.println(
+//                    "you have marked: " + foodItemNameInput + " as " + choiceInput + " in your FoodItem List");
+//        } else {
+//            System.out.println("invalid input");
+//        }
+//    }
 
-        if (purchasedDate.length() >= 1) {
-            System.out.println("you entered: " + purchasedDate);
-        }
-
-        DateFoodItem date = new DateFoodItem();
-        return date.dateStringToMilli(purchasedDate);
-    }
-
-    private void doDeleteFoodItem() {
-        boolean onGoing;
-        String foodItemNameInput;
-        do {
-            foodItemNameInput = "";
-            System.out.println("\nPlease enter FoodItem's Name you want to delete in your FoodItem List");
-            while (foodItemNameInput.length() < 1) {
-                foodItemNameInput = input.nextLine();
-            }
-            if (foodItemNameInput.length() >= 1) {
-                System.out.println("you entered: " + foodItemNameInput);
-            }
-            tryToDeleteFoodItemFromFoodItemList(foodItemNameInput);
-
-            onGoing = askForRepeat();
-        } while (onGoing);
-    }
-
-    private void tryToDeleteFoodItemFromFoodItemList(String foodItemNameInput) {
-        if (foodItemList.containInFoodItemList(foodItemNameInput)) {
-            for (FoodItem foodItem : foodItemList.getFoodItemList()) {
-                if (foodItem.getFoodItemName().equals(foodItemNameInput)) {
-                    foodItemList.deleteFoodItem(foodItem);
-                    break;
-                }
-            }
-            System.out.println("you have deleted: " + foodItemNameInput + " in your FoodItem List");
-        } else {
-            System.out.println("Can't find " + foodItemNameInput + " in your FoodItem List");
-        }
-    }
-
-    private void doDeleteShoppingItem() {
-        boolean onGoing;
-        String foodItemNameInput;
-        do {
-            foodItemNameInput = "";
-            System.out.println("\nPlease enter FoodItem's Name you want to delete in your ShoppingItem List");
-            while (foodItemNameInput.length() < 1) {
-                foodItemNameInput = input.nextLine();
-            }
-            if (foodItemNameInput.length() >= 1) {
-                System.out.println("you entered: " + foodItemNameInput);
-            }
-            tryToDeleteFoodItemFromShoppingItemList(foodItemNameInput);
-            onGoing = askForRepeat();
-        } while (onGoing);
-    }
-
-    private void tryToDeleteFoodItemFromShoppingItemList(String foodItemNameInput) {
-        if (shoppingItemList.containInShoppingItemList(foodItemNameInput)) {
-            for (FoodItem foodItem : shoppingItemList.getShoppingItemList()) {
-                if (foodItem.getFoodItemName().equals(foodItemNameInput)) {
-                    shoppingItemList.deleteFoodItem(foodItem);
-                    break;
-                }
-            }
-            System.out.println("you have deleted: " + foodItemNameInput + " in your ShoppingItem List");
-        } else {
-            System.out.println("Can't find " + foodItemNameInput + " in your ShoppingItem List");
-        }
-
-    }
-
-    private void doMarkFoodItem() {
-        boolean notEnd = true;
-        while (notEnd) {
-            System.out.println(
-                    "\nPlease enter FoodItem's Name you want to mark as Used or OutOfStock in your FoodItem List");
-            String foodItemNameInput = input.nextLine();
-
-            while (foodItemNameInput.length() < 1) {
-                foodItemNameInput = input.nextLine();
-                if (foodItemNameInput.length() >= 1) {
-                    System.out.println("you entered: " + foodItemNameInput);
-                }
-            }
-
-            if (foodItemList.containInFoodItemList(foodItemNameInput)) {
-                askForChangingStatus(foodItemNameInput);
-
-            } else {
-                System.out.println("Can't find " + foodItemNameInput + " in FoodItem list");
-            }
-            notEnd = askForRepeat();
-        }
-    }
-
-    private void askForChangingStatus(String foodItemNameInput) {
-        System.out.println("\nPlease enter one of the Status: type used or outofstock");
-        String choiceInput;
-        do {
-            choiceInput = input.nextLine();
-            if (choiceInput.length() >= 1) {
-                if (choiceInput.equals("used") || choiceInput.equals("outofstock")) {
-                    System.out.println("you entered: " + choiceInput);
-                } else {
-                    System.out.println("\ninvalid input, please try again!");
-                }
-            } else {
-                System.out.println("\nempty input, please try again!");
-            }
-        } while (choiceInput.length() < 1 || (!choiceInput.equals("used") && !choiceInput.equals("outofstock")));
-
-        changeFoodItemStatus(foodItemNameInput, choiceInput);
-
-        if (choiceInput.equals("used") || choiceInput.equals("outofstock")) {
-
-            System.out.println(
-                    "you have marked: " + foodItemNameInput + " as " + choiceInput + " in your FoodItem List");
-        } else {
-            System.out.println("invalid input");
-        }
-    }
-
-    private void changeFoodItemStatus(String foodItemNameInput, String choiceInput) {
-        for (FoodItem foodItem : foodItemList.getFoodItemList()) {
-            if (foodItem.getFoodItemName().equals(foodItemNameInput)) {
-                if (choiceInput.equals("used")) {
-                    foodItem.markFoodItemStatus(FoodItem.Status.Used);
-                } else if (choiceInput.equals("outofstock")) {
-                    foodItem.markFoodItemStatus(FoodItem.Status.OutOfStock);
-                }
-            }
-        }
-
-    }
-
-
-    private void doAddShoppingItem() {
-        boolean notEnd = true;
-        while (notEnd) {
-            System.out.println("\nPlease enter FoodItem's Name");
-            String foodItemNameInput = input.nextLine();
-
-            while (foodItemNameInput.length() < 1) {
-                foodItemNameInput = input.nextLine();
-                if (foodItemNameInput.length() >= 1) {
-                    System.out.println("you have added: " + foodItemNameInput + " in your ShoppingItem List");
-                }
-            }
-            FoodItem foodItem2 = new FoodItem(foodItemNameInput, new DateFoodItem(), new DateFoodItem());
-            shoppingItemList.addFoodItem(foodItem2);
-            notEnd = askForRepeat();
-        }
-    }
-
-    private void doViewFoodItemList() {
-        if (foodItemList.getFoodItemList().isEmpty()) {
-            System.out.println("FoodItem list is empty");
-        } else {
-            for (FoodItem foodItem : foodItemList.getFoodItemList()) {
-                System.out.println(foodItem.getFoodItemName());
-                System.out.println("Purchased date: " + foodItem.getPurchasedDate().getDateInString());
-                System.out.println("Expiry date: " + foodItem.getExpiryDate().getDateInString());
-                System.out.println("Food Status: " + foodItem.getStatus());
-            }
-        }
+//    private void changeFoodItemStatus(String foodItemNameInput, String choiceInput) {
+//        for (FoodItem foodItem : foodItemList.getFoodItemList()) {
+//            if (foodItem.getFoodItemName().equals(foodItemNameInput)) {
+//                if (choiceInput.equals("used")) {
+//                    foodItem.markFoodItemStatus(FoodItem.Status.Used);
+//                } else if (choiceInput.equals("outofstock")) {
+//                    foodItem.markFoodItemStatus(FoodItem.Status.OutOfStock);
+//                }
+//            }
+//        }
+//
+//    }
 
 
-    }
+//    private void doAddShoppingItem() {
+//        boolean notEnd = true;
+//        while (notEnd) {
+//            System.out.println("\nPlease enter FoodItem's Name");
+//            String foodItemNameInput = input.nextLine();
+//
+//            while (foodItemNameInput.length() < 1) {
+//                foodItemNameInput = input.nextLine();
+//                if (foodItemNameInput.length() >= 1) {
+//                    System.out.println("you have added: " + foodItemNameInput + " in your ShoppingItem List");
+//                }
+//            }
+//            FoodItem foodItem2 = new FoodItem(foodItemNameInput, new DateFoodItem(), new DateFoodItem());
+//            shoppingItemList.addFoodItem(foodItem2);
+//            notEnd = askForRepeat();
+//        }
+//    }
 
-    private void doViewExpiryItem() {
-        expiryFoodItemList = foodItemList.returnExpiryFoodItem();
+//    private void doViewFoodItemList() {
+//        if (foodItemList.getFoodItemList().isEmpty()) {
+//            System.out.println("FoodItem list is empty");
+//        } else {
+//            for (FoodItem foodItem : foodItemList.getFoodItemList()) {
+//                System.out.println(foodItem.getFoodItemName());
+//                System.out.println("Purchased date: " + foodItem.getPurchasedDate().getDateInString());
+//                System.out.println("Expiry date: " + foodItem.getExpiryDate().getDateInString());
+//                System.out.println("Food Status: " + foodItem.getStatus());
+//            }
+//        }
+//
+//
+//    }
 
-        if (expiryFoodItemList.getFoodItemList().isEmpty()) {
-            System.out.println("Expiry FoodItem list is empty");
-        } else {
-            for (FoodItem foodItem : expiryFoodItemList.getFoodItemList()) {
-                System.out.println(foodItem.getFoodItemName());
-                System.out.println("Purchased date: " + foodItem.getPurchasedDate().getDateInString());
-                System.out.println("Expiry date: " + foodItem.getExpiryDate().getDateInString());
-                System.out.println("Food Status: " + foodItem.getStatus());
-            }
-        }
+//    private void doViewExpiryItem() {
+//        expiryFoodItemList = foodItemList.returnExpiryFoodItem();
+//
+//        if (expiryFoodItemList.getFoodItemList().isEmpty()) {
+//            System.out.println("Expiry FoodItem list is empty");
+//        } else {
+//            for (FoodItem foodItem : expiryFoodItemList.getFoodItemList()) {
+//                System.out.println(foodItem.getFoodItemName());
+//                System.out.println("Purchased date: " + foodItem.getPurchasedDate().getDateInString());
+//                System.out.println("Expiry date: " + foodItem.getExpiryDate().getDateInString());
+//                System.out.println("Food Status: " + foodItem.getStatus());
+//            }
+//        }
+//
+//    }
 
-    }
 
-
-    private void doViewShoppingItemList() {
-        if (shoppingItemList.getShoppingItemList().isEmpty()) {
-            System.out.println("ShoppingItem list is empty");
-        } else {
-            for (FoodItem foodItem : shoppingItemList.getShoppingItemList()) {
-                System.out.println(foodItem.getFoodItemName());
-            }
-        }
-
-    }
+//    private void doViewShoppingItemList() {
+//        if (shoppingItemList.getShoppingItemList().isEmpty()) {
+//            System.out.println("ShoppingItem list is empty");
+//        } else {
+//            for (FoodItem foodItem : shoppingItemList.getShoppingItemList()) {
+//                System.out.println(foodItem.getFoodItemName());
+//            }
+//        }
+//
+//    }
 
     // EFFECTS: saves the foodItemList to file
     private void saveFoodItemList() {

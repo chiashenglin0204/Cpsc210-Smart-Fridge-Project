@@ -26,6 +26,11 @@ public class FoodItemTest {
 
 
     @Test
+    public void testGetLocalTime() {
+        assertEquals(Calendar.getInstance().getTimeInMillis(), getLocalTime());
+    }
+
+    @Test
     public void testMarkFoodItemStatus() {
         foodItem.markFoodItemStatus(FoodItem.Status.Used);
         assertEquals(FoodItem.Status.Used, foodItem.getStatus());
