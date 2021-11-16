@@ -23,8 +23,6 @@ public class FoodItemTest {
         purchasedDate = new DateFoodItem().dateStringToMilli("2021/01/30");
         DateFoodItem expiryDate = new DateFoodItem().dateStringToMilli("2021/02/04");
         foodItem = new FoodItem("banana", purchasedDate, expiryDate);
-
-
     }
 
 
