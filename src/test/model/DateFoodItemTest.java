@@ -27,38 +27,23 @@ public class DateFoodItemTest {
 
     @Test
     public void testDateMilliToString() {
-        try {
-            date.dateMilliToString(myBirthdayInMilli);
-            assertEquals(myBirthdayInMilli, date.getDateInMilli());
-            assertEquals(myBirthday, date.getDateInString());
-            assertEquals(date.dateStringToMilli(myBirthday), date.dateMilliToString(myBirthdayInMilli));
-        } catch (ParseException exception) {
-            fail("didn't expect parse exception");
-        }
+
+        date.dateMilliToString(myBirthdayInMilli);
+        assertEquals(myBirthdayInMilli, date.getDateInMilli());
+        assertEquals(myBirthday, date.getDateInString());
+        assertEquals(date.dateStringToMilli(myBirthday), date.dateMilliToString(myBirthdayInMilli));
+
     }
 
     @Test
     public void testDateStringToMilli() {
-        try {
         date.dateStringToMilli(myBirthday);
         assertEquals(myBirthdayInMilli, date.getDateInMilli());
         assertEquals(myBirthday, date.getDateInString());
-        assertEquals(date.dateStringToMilli(myBirthday), date.dateMilliToString(myBirthdayInMilli));}
-        catch (ParseException exception) {
-            fail("didn't expect parse exception");
-        }
+        assertEquals(date.dateStringToMilli(myBirthday), date.dateMilliToString(myBirthdayInMilli));
     }
 
-    @Test
-    public void testWrongDateFormat() {
-         String s = "202022";
-         try {
-             date.dateStringToMilli(s);
-             fail("we expect fail here");
-         }catch (ParseException exception) {
-             //we pass here
-         }
-    }
+
 
 
 }

@@ -18,7 +18,6 @@ import java.util.Scanner;
 import java.awt.*;
 import java.awt.event.*;
 
-import static com.sun.tools.internal.ws.wsdl.parser.Util.fail;
 
 
 public class SmartFridgeApp extends JFrame {
@@ -481,17 +480,14 @@ public class SmartFridgeApp extends JFrame {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    String foodItemName = textField.getText();
-                    DateFoodItem purchaseDate = new DateFoodItem().dateStringToMilli(textField1.getText());
-                    DateFoodItem expiryDate = new DateFoodItem().dateStringToMilli(textField2.getText());
 
-                    FoodItem foodItem1 = new FoodItem(foodItemName, purchaseDate, expiryDate);
-                    foodItemList.addFoodItem(foodItem1);
-                    subFrame.setVisible(false);
-                } catch (ParseException exception) {
-                    System.out.println("invalid date input");
-                }
+                String foodItemName = textField.getText();
+                DateFoodItem purchaseDate = new DateFoodItem().dateStringToMilli(textField1.getText());
+                DateFoodItem expiryDate = new DateFoodItem().dateStringToMilli(textField2.getText());
+
+                FoodItem foodItem1 = new FoodItem(foodItemName, purchaseDate, expiryDate);
+                foodItemList.addFoodItem(foodItem1);
+                subFrame.setVisible(false);
 
             }
         });

@@ -31,17 +31,18 @@ public class DateFoodItem {
         return this;
     }
 
-    public DateFoodItem dateStringToMilli(String dateInString) throws ParseException {
+    public DateFoodItem dateStringToMilli(String dateInString) {
 
-        this.dateInString = dateInString;
-        SimpleDateFormat sdf = new SimpleDateFormat(datePattern);
-        java.util.Date date = null;
-        date = sdf.parse(dateInString);
-        dateInMilli = date.getTime();
+        try {
+            this.dateInString = dateInString;
+            SimpleDateFormat sdf = new SimpleDateFormat(datePattern);
+            java.util.Date date = null;
+            date = sdf.parse(dateInString);
+            dateInMilli = date.getTime();
+        } catch (ParseException exception) {
+            System.out.println("haha you have exception bro");
+        }
 
-        //catch (ParseException e) {
-//            fail("invalid date input");
-//        }
         return this;
     }
 

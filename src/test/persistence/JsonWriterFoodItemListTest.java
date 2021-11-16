@@ -80,8 +80,6 @@ class JsonWriterFoodItemListTest extends JsonTest {
         } catch (IOException e) {
             fail("Exception should not have been thrown");
         }
-        catch (ParseException exception) {
-            fail("did not expect parseException");
-        }
+
     }
 }
