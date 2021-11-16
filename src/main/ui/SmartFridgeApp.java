@@ -490,7 +490,7 @@ public class SmartFridgeApp extends JFrame {
                     foodItemList.addFoodItem(foodItem1);
                     subFrame.setVisible(false);
                 } catch (ParseException exception) {
-                    fail("invalid date input");
+                    System.out.println("invalid date input");
                 }
 
             }

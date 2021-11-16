@@ -77,7 +77,7 @@ public class JsonReaderFoodItemList {
             FoodItem foodItem = new FoodItem(foodItemName, purchasedDate, expiryDate);
             foodItemList.addFoodItem(foodItem);
         } catch (ParseException exception) {
-            fail("parseException did not expect");
+            System.out.println("did not expect ParseException");
         }
     }
 
