@@ -41,6 +41,9 @@ public class DateFoodItemTest {
         assertEquals(myBirthdayInMilli, date.getDateInMilli());
         assertEquals(myBirthday, date.getDateInString());
         assertEquals(date.dateStringToMilli(myBirthday), date.dateMilliToString(myBirthdayInMilli));
+
+        assertEquals(myBirthdayInMilli,date.dateStringToMilli("2020").getDateInMilli());
+
     }
 
 
