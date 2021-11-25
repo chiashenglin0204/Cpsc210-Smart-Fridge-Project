@@ -33,7 +33,9 @@ public class ShoppingItemList implements Writable {
     //Required: ShoppingItemlist must contain the specific FoodItem initially
     //Effect: delete a Fooditem from the ShoppingItemlist
     public void deleteFoodItem(FoodItem foodItem) {
-        EventLog.getInstance().logEvent(new Event("delete " + foodItem.getFoodItemName() + " in your shoppingItem List"));
+        EventLog.getInstance().logEvent(
+                new Event(
+                        "delete " + foodItem.getFoodItemName() + " in your shoppingItem List"));
         shoppingItemList.remove(foodItem);
     }
 
