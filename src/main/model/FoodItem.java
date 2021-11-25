@@ -64,6 +64,8 @@ public class FoodItem implements Writable {
 
     //Effect: Change expired to true if current time is bigger than expiryDate
     public void checkExpiryFoodItem() {
+        EventLog.getInstance().logEvent(new Event("check expiry FoodItem on " + this.foodItemName));
+
         if (getLocalTime() > this.expiryDate.getDateInMilli()) {
             expired = true;
         }

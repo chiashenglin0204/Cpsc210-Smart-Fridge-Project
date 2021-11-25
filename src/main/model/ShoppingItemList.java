@@ -25,6 +25,7 @@ public class ShoppingItemList implements Writable {
 
     //Effect: add a Fooditem into the Shoppingitemlist
     public void addFoodItem(FoodItem foodItem) {
+        EventLog.getInstance().logEvent(new Event("add " + foodItem.getFoodItemName() + " in your shoppingItem List"));
         shoppingItemList.add(foodItem);
 
     }
@@ -32,6 +33,7 @@ public class ShoppingItemList implements Writable {
     //Required: ShoppingItemlist must contain the specific FoodItem initially
     //Effect: delete a Fooditem from the ShoppingItemlist
     public void deleteFoodItem(FoodItem foodItem) {
+        EventLog.getInstance().logEvent(new Event("delete " + foodItem.getFoodItemName() + " in your shoppingItem List"));
         shoppingItemList.remove(foodItem);
     }
 

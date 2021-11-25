@@ -28,10 +28,19 @@ buy all the foodItem in the list
 - As a user, I want to be able to add/delete a foodItem in my FoodItem list
 - As a user, I want to be able to view the list of foodItem in my ShoppingItem list 
 - As a user, I want to be able to view the list of foodItem in my FoodItem list with its purchase date and expiry date.
-- As a user, I want to be able to mark a foodItem in FoodItem list as Used and Out of Stock 
 - As a user, I want to be able to view the list of expiry FoodItems in my 
 FoodItem list with its purchase date and expiry date.
 - As a user, when I select the quit option from the application menu, I want to be reminded to save my current 
 FoodItem list and ShoppingItem list, and have the option to do so or not.
 - As a user, when I start the application, I want to be given the option to load my FoodItem and ShoppingItem list from 
 file.
+
+Phase 4: Task 2 :
+- add Apple in your foodItem List with purchase date 2021/01/30 expiry date 2021/02/04
+- add Banana in your shoppingItem List
+- return expiry FoodItems in your foodItem List
+- check expiry FoodItem on Apple
+- delete Apple in your foodItem List with purchase date 2021/01/30 expiry date 2021/02/04
+- delete Banana in your shoppingItem List
+
+Phase 4: Task 3: is on the root folder "uml design diagram"

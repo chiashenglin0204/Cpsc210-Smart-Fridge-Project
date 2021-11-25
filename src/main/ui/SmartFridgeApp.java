@@ -1,15 +1,16 @@
 package ui;
 
-import model.DateFoodItem;
-import model.FoodItem;
-import model.FoodItemList;
-import model.ShoppingItemList;
+import model.*;
+import model.Event;
 import persistence.JsonReaderShoppingItemList;
 import persistence.JsonReaderFoodItemList;
 import persistence.JsonWriterFoodItemList;
 import persistence.JsonWriterShoppingItemList;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
@@ -17,7 +18,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.awt.*;
 import java.awt.event.*;
-
 
 
 public class SmartFridgeApp extends JFrame {
@@ -81,7 +81,7 @@ public class SmartFridgeApp extends JFrame {
         return frame;
     }
 
-    public SmartFridgeApp() throws FileNotFoundException, ParseException {
+    public SmartFridgeApp() throws IOException, ParseException {
         jsonWriterFoodItemList = new JsonWriterFoodItemList(JSON_STORE_FoodItemList);
         jsonWriterShoppingItemList = new JsonWriterShoppingItemList(JSON_STORE_ShoppingItemList);
         jsonReaderShoppingItemList = new JsonReaderShoppingItemList(JSON_STORE_ShoppingItemList);
@@ -92,7 +92,7 @@ public class SmartFridgeApp extends JFrame {
     }
 
 
-    private void runSmartFridge() throws ParseException, FileNotFoundException {
+    private void runSmartFridge() throws ParseException, FileNotFoundException, IOException {
         //boolean keepGoing = true;
         //String command = null;
         init();
@@ -156,10 +156,14 @@ public class SmartFridgeApp extends JFrame {
         expiryFoodItemList = new FoodItemList();
     }
 
-    private void displayMenu1() {
+    private void displayMenu1() throws IOException {
         JFrame frame = createFrame("Smart Fridge");
         JPanel panel = createPanel();
         frame.add(panel, BorderLayout.CENTER);
+
+        BufferedImage myPicture = ImageIO.read(new File("download.jpeg"));
+        JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+        panel.add(picLabel);
 
         JButton button = addFoodItemToFoodItemListButton();
         JButton button1 = viewFoodItemList();
@@ -168,9 +172,26 @@ public class SmartFridgeApp extends JFrame {
         JButton button4 = viewExpiryItem();
         JButton button5 = saveButton();
         JButton button6 = loadButton();
-        JButton button7 = exitButton(frame);
+        JButton button7 = deleteFoodItemToFoodItemListButton();
+        JButton button8 = deleteFoodItemToShoppingItemListButton();
+        JButton button9 = exitButton(frame);
 
 
+
+        addButtonsToPanel(
+                panel, button, button1, button2, button3, button4, button5, button6, button7, button8, button9);
+
+
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(frameWidth, frameHeight);
+
+
+    }
+
+    private void addButtonsToPanel(
+            JPanel panel, JButton button, JButton button1, JButton button2, JButton button3, JButton button4,
+            JButton button5, JButton button6, JButton button7, JButton button8, JButton button9) {
         panel.add(button);
         panel.add(button1);
         panel.add(button2);
@@ -179,13 +200,139 @@ public class SmartFridgeApp extends JFrame {
         panel.add(button5);
         panel.add(button6);
         panel.add(button7);
+        panel.add(button8);
+        panel.add(button9);
+    }
+
+    private JButton deleteFoodItemToShoppingItemListButton() {
+        JButton button = createButton("delete FoodItem in the ShoppingItem list", 50, 90);
+        doDeleteShoppingItem1(button);
+
+        return button;
+    }
+
+    private void doDeleteShoppingItem1(JButton button) {
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // create new Frame for adding foodItem to shoppingItemList with label and textField and
+                // continue button
+                JFrame subFrame = createFrame("delete FoodItem to your ShoppingItemList");
+                JPanel subPanel = createPanel();
+                subPanel.setBackground(new Color(0, 128, 128));
+
+                JLabel label = createLabel(
+                        "please enter foodItem purchase name",
+                        frameWidth / 2, frameHeight / 4 + 100 - 50);
+                JTextField textField = createTextField(frameWidth / 2, frameHeight / 4 + 100);
 
 
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(frameWidth, frameHeight);
+                JButton exitButton = exitButtonForDeleteShoppingItemList(subFrame, textField);
+
+                subPanel.add(label, BorderLayout.CENTER);
+
+                subPanel.add(textField);
+
+                subPanel.add(exitButton);
+
+                subPanel.setLayout(null);
+
+                addPanelToFrameAndVisible(subFrame, subPanel);
 
 
+            }
+
+
+        });
+    }
+
+    private JButton exitButtonForDeleteShoppingItemList(JFrame subFrame, JTextField textField) {
+        JButton button = createButton("Complete!", frameWidth / 2, frameHeight / 4 - 100);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String foodItemName = textField.getText();
+                if (shoppingItemList.containInShoppingItemList(foodItemName)) {
+                    for (FoodItem foodItem : shoppingItemList.getShoppingItemList()) {
+                        if (foodItem.getFoodItemName().equals(foodItemName)) {
+                            shoppingItemList.deleteFoodItem(foodItem);
+                            break;
+                        }
+                    }
+                }
+                subFrame.setVisible(false);
+
+            }
+        });
+        return button;
+    }
+
+    private JButton deleteFoodItemToFoodItemListButton() {
+        JButton button = createButton("delete FoodItem in the FoodItem list", 50, 90);
+        doDeleteFoodItem1(button);
+
+        return button;
+    }
+
+    private void doDeleteFoodItem1(JButton button) {
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // create new Frame for adding foodItem to foodItemList with label and textField and
+                // continue button
+                JFrame subFrame = createFrame("delete FoodItem to your FoodItemList");
+                JPanel subPanel = createPanel();
+                subPanel.setBackground(new Color(0, 128, 128));
+
+                JLabel label = getjLabel("please enter foodItem purchase name", 100);
+                JTextField textField = createTextField(frameWidth / 2, frameHeight / 4 + 100);
+
+                JLabel label1 = getjLabel("please enter foodItem purchase date", 200);
+                JTextField textField1 = createTextField(frameWidth / 2, frameHeight / 4 + 200);
+
+                JLabel label2 = getjLabel("please enter foodItem expiry date", 300);
+                JTextField textField2 = createTextField(frameWidth / 2, frameHeight / 4 + 300);
+
+                JButton exit = exitButtonForDeleteFoodItemList(subFrame, textField, textField1, textField2);
+
+                addJComponentToPanel(subPanel, label, textField, label1, textField1, label2, textField2, exit);
+
+                subPanel.setLayout(null);
+                subFrame.add(subPanel);
+                subPanel.setVisible(true);
+                subFrame.setVisible(true);
+
+
+            }
+
+
+        });
+    }
+
+    private JButton exitButtonForDeleteFoodItemList(
+            JFrame subFrame, JTextField textField, JTextField textField1, JTextField textField2) {
+        JButton button = createButton("Complete!", frameWidth / 2, frameHeight / 4 - 100);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String foodItemName = textField.getText();
+                DateFoodItem purchaseDate = new DateFoodItem().dateStringToMilli(textField1.getText());
+                DateFoodItem expiryDate = new DateFoodItem().dateStringToMilli(textField2.getText());
+                if (foodItemList.containInFoodItemList(foodItemName)) {
+                    for (FoodItem foodItem : foodItemList.getFoodItemList()) {
+                        if (foodItem.getFoodItemName().equals(foodItemName)) {
+                            foodItemList.deleteFoodItem(foodItem);
+                            break;
+                        }
+                    }
+                }
+                subFrame.setVisible(false);
+
+            }
+        });
+        return button;
     }
 
     private JButton loadButton() {
@@ -499,6 +646,9 @@ public class SmartFridgeApp extends JFrame {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                for (Event event : EventLog.getInstance()) {
+                    System.out.println(event.getDescription());
+                }
                 frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
             }
         });

@@ -29,6 +29,10 @@ public class FoodItemList implements Writable {
 
     //Effect: add a Fooditem into the Fooditemlist
     public void addFoodItem(FoodItem foodItem) {
+        EventLog.getInstance().logEvent(new Event(
+                "add " + foodItem.getFoodItemName() + " in your foodItem List with purchase date "
+                        + foodItem.getPurchasedDate().getDateInString()
+                        + " expiry date " + foodItem.getExpiryDate().getDateInString()));
         foodItemList.add(foodItem);
 
     }
@@ -36,6 +40,10 @@ public class FoodItemList implements Writable {
     //Required: FoodItemlist must contain the specific FoodItem initially
     //Effect: delete a Fooditem from the Fooditemlist
     public void deleteFoodItem(FoodItem foodItem) {
+        EventLog.getInstance().logEvent(new Event(
+                "delete " + foodItem.getFoodItemName() + " in your foodItem List with purchase date "
+                        + foodItem.getPurchasedDate().getDateInString()
+                        + " expiry date " + foodItem.getExpiryDate().getDateInString()));
         foodItemList.remove(foodItem);
 
     }
@@ -43,6 +51,7 @@ public class FoodItemList implements Writable {
     //Effect: return the expired FoodItemList which contain expired foodItem
     public FoodItemList returnExpiryFoodItem() {
         FoodItemList expiredFoodItemList = new FoodItemList();
+        EventLog.getInstance().logEvent(new Event("return expiry FoodItems in your foodItem List"));
         for (FoodItem foodItem : foodItemList) {
             foodItem.checkExpiryFoodItem();
             if (foodItem.isExpired()) {
@@ -70,7 +79,7 @@ public class FoodItemList implements Writable {
         return json;
     }
 
-    // EFFECTS: returns things in this workroom as a JSON array
+    // EFFECTS: returns things in this foodItemList as a JSON array
     private JSONArray foodItemsToJson() {
         JSONArray jsonArray = new JSONArray();
 
