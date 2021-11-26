@@ -44,3 +44,10 @@ Phase 4: Task 2 :
 - delete Banana in your shoppingItem List
 
 Phase 4: Task 3: is on the root folder "uml design diagram"
+- I would probably create a abstract ItemList class, and let FoodItemList and ShoppingItemList to extends ItemList class, 
+so I can make code more simple by making similar method in abstract class. 
+- Or I can probably
+create an interface ItemList to specify the class outlook for both FoodItemList and ShoppingItemList class.
+- In ui, the cods is little messy, I would probably create more class in UI to seperate each task so the SmartFridgeApp 
+class don't need to store all the behavior. 
+- I can also make a consoleWriter  class in ui and implement Observer to write the console.
